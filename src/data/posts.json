@@ -1,0 +1,111 @@
+[
+  {
+    "id": "post1",
+    "user": {
+      "name": "Alice Smith",
+      "profilePicture": "https://images.unsplash.com/photo-1640951613773-54706e06851d?q=80&w=2967&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    "content": "This is a new post about blockchain technology!",
+    "media": "https://plus.unsplash.com/premium_photo-1721762724257-d0eefa8529f3?q=80&w=3265&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "createdAt": "2024-11-01",
+    "likes": 5,
+    "comments": [
+      {
+        "user": "John Doe",
+        "content": "Great post! Looking forward to more updates."
+      }
+    ]
+  },
+  {
+    "id": "post2",
+    "user": {
+      "name": "Bob Johnson",
+      "profilePicture": "https://images.unsplash.com/photo-1730112635879-86d3e9072e8a?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    "content": "Just finished an amazing book on JavaScript!",
+    "media": "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?q=80&w=3432&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "createdAt": "2024-11-02",
+    "likes": 10,
+    "comments": [
+      {
+        "user": "Charlie Brown",
+        "content": "What book did you read? Sounds interesting!"
+      }
+    ]
+  },
+  {
+    "id": "post3",
+    "user": {
+      "name": "Sarah Lee",
+      "profilePicture": "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    "content": "Excited about the new features in React 18!",
+    "media": "https://images.unsplash.com/photo-1542549237432-a176cb9d5e5e?q=80&w=2815&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "createdAt": "2024-11-03",
+    "likes": 8,
+    "comments": [
+      {
+        "user": "David Green",
+        "content": "React 18 looks awesome!"
+      }
+    ]
+  },
+  {
+    "id": "post4",
+    "user": {
+      "name": "Michael Brown",
+      "profilePicture": "https://images.unsplash.com/photo-1639149888905-fb39731f2e6c?q=80&w=3315&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    "content": "Looking forward to building with GraphQL!",
+    "media": "https://images.unsplash.com/photo-1571131553414-64389f94c380?q=80&w=2448&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "createdAt": "2024-11-04",
+    "likes": 12,
+    "comments": []
+  },
+  {
+    "id": "post2",
+    "user": {
+      "name": "Bob Johnson",
+      "profilePicture": "https://images.unsplash.com/photo-1640951613773-54706e06851d?q=80&w=2967&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    "content": "Just finished an amazing book on JavaScript!",
+    "media": "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?q=80&w=3432&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "createdAt": "2024-11-02",
+    "likes": 10,
+    "comments": [
+      {
+        "user": "Charlie Brown",
+        "content": "What book did you read? Sounds interesting!"
+      }
+    ]
+  },
+  {
+    "id": "post3",
+    "user": {
+      "name": "Sarah Lee",
+      "profilePicture": "https://images.unsplash.com/photo-1730131434819-084da0348b25?q=80&w=3435&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    "content": "Excited about the new features in React 18!",
+    "media": "https://images.unsplash.com/photo-1542549237432-a176cb9d5e5e?q=80&w=2815&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "createdAt": "2024-11-03",
+    "likes": 8,
+    "comments": [
+      {
+        "user": "David Green",
+        "content": "React 18 looks awesome!"
+      }
+    ]
+  },
+  {
+    "id": "post4",
+    "user": {
+      "name": "Michael Brown",
+      "profilePicture": "https://images.unsplash.com/photo-1640951613773-54706e06851d?q=80&w=2967&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    "content": "Looking forward to building with GraphQL!",
+    "media": "https://images.unsplash.com/photo-1571131553414-64389f94c380?q=80&w=2448&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "createdAt": "2024-11-04",
+    "likes": 12,
+    "comments": []
+  }
+]
