@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import PageTemplate from "../../components/_layout";
 import Typography from "../../components/ui/Typography";
 import postsJson from "../../data/posts.json";
-
-// Example posts for display
+import PostModal from "../../components/modals/PostModal";
+import CreatePost from "../../components/CreatePost";
 
 const Newsfeed: React.FC = () => {
   const [postContent, setPostContent] = useState("");
   const [posts, setPosts] = useState(postsJson);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   // Handle post creation
   const handleCreatePost = (e: React.FormEvent) => {
@@ -16,9 +18,9 @@ const Newsfeed: React.FC = () => {
       const newPost = {
         id: Date.now().toString(),
         user: {
-          name: "Current User", // Replace with logged-in user's name
+          name: "Current User",
           profilePicture:
-            "https://images.unsplash.com/photo-1486401899868-0e435ed85128?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Replace with logged-in user's profile picture
+            "https://images.unsplash.com/photo-1486401899868-0e435ed85128?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         },
         content: postContent,
         media: "",
@@ -27,7 +29,7 @@ const Newsfeed: React.FC = () => {
         comments: [],
       };
       setPosts([newPost, ...posts]);
-      setPostContent(""); // Clear the input field
+      setPostContent("");
     }
   };
 
@@ -58,35 +60,39 @@ const Newsfeed: React.FC = () => {
     );
   };
 
+  // Handle opening modal
+  const handleOpenModal = (post: any) => {
+    console.log("Opening modal for post:", post);
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  // Handle closing modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
+
   return (
     <PageTemplate>
       <div className="space-y-8">
         {/* Create Post Section */}
-        <div className="bg-dark-200 p-6 rounded-lg shadow-md">
-          <Typography variant="h6" className="mb-4 font-semibold">
-            Create a Post
-          </Typography>
-          <form onSubmit={handleCreatePost}>
-            <textarea
-              value={postContent}
-              onChange={(e) => setPostContent(e.target.value)}
-              className="w-full p-4 bg-dark-100 text-white rounded-md mb-4"
-              placeholder="What's on your mind?"
-              rows={4}
-            />
-            <button
-              type="submit"
-              className="bg-primary-500 text-white px-6 py-2 rounded-lg hover:bg-primary-600"
-            >
-              Post
-            </button>
-          </form>
-        </div>
+        <CreatePost
+          onSubmit={handleCreatePost}
+          userAvatar="https://images.unsplash.com/photo-1486401899868-0e435ed85128?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3"
+        />
 
         {/* Post List Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.map((post) => (
-            <div key={post.id} className="bg-dark-200 p-6 rounded-lg shadow-md">
+            <div
+              key={post.id}
+              className="bg-dark-200 p-6 rounded-lg shadow-md cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent modal open on like
+                handleLikePost(post.id);
+              }}
+            >
               <div className="flex items-center mb-4">
                 <img
                   src={post.user.profilePicture}
@@ -112,7 +118,10 @@ const Newsfeed: React.FC = () => {
               )}
               <div className="flex items-center space-x-4">
                 <button
-                  onClick={() => handleLikePost(post.id)}
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent modal open on like
+                    handleLikePost(post.id);
+                  }}
                   className="flex items-center text-primary-500 hover:text-primary-600"
                 >
                   👍 {post.likes}
@@ -121,31 +130,19 @@ const Newsfeed: React.FC = () => {
                   💬 {post.comments.length}
                 </div>
               </div>
-              {/* Comment Section */}
-              {/* <div className="mt-4">
-                <textarea
-                  className="w-full p-2 bg-dark-100 text-white rounded-md mb-4"
-                  placeholder="Add a comment"
-                  rows={3}
-                  onBlur={(e) => handleComment(post.id, e.target.value)}
-                />
-                <div className="space-y-4">
-                  {post.comments.map((comment, index) => (
-                    <div key={index} className="border-t pt-2">
-                      <Typography variant="body2" className="font-semibold">
-                        {comment.user}:
-                      </Typography>
-                      <Typography variant="body2" className="text-gray-400">
-                        {comment.content}
-                      </Typography>
-                    </div>
-                  ))}
-                </div>
-              </div> */}
             </div>
           ))}
         </div>
       </div>
+
+      {/* Post Modal */}
+      {isModalOpen && selectedPost && (
+        <PostModal
+          post={selectedPost}
+          onClose={handleCloseModal}
+          isOpen={isModalOpen}
+        />
+      )}
     </PageTemplate>
   );
 };
