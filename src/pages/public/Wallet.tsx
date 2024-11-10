@@ -1,159 +1,352 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import PageTemplate from "../../components/_layout";
-import Typography from "../../components/ui/Typography";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../../components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs";
+import { Button } from "@mui/material";
+import { Badge } from "../../components/ui/badge";
+import {
+  Wallet as WalletIcon,
+  Copy,
+  ArrowUpRight,
+  ArrowDownRight,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Search,
+} from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
+import { Input } from "../../components/ui/input";
 
-// Example data for wallet transactions
-const exampleTransactions = [
-  {
-    id: "txn1",
-    date: "2024-11-01",
-    type: "Sent",
-    amount: 0.5,
-    status: "Approved", // Added status for each transaction
-    to: "0xabcdef1234567890abcdef1234567890abcdef12",
-  },
-  {
-    id: "txn2",
-    date: "2024-11-02",
-    type: "Received",
-    amount: 1.2,
-    status: "Pending", // Added status for each transaction
-    from: "0x9876543210abcdef9876543210abcdef98765432",
-  },
-  {
-    id: "txn3",
-    date: "2024-11-03",
-    type: "Sent",
-    amount: 2.0,
-    status: "Rejected", // Added status for each transaction
-    to: "0xabcdef1234567890abcdef1234567890abcdef12",
-  },
-];
+import TransactionModal from "../../components/modals/TransactionModal";
+
+interface Transaction {
+  id: string;
+  date: string;
+  type: "Sent" | "Received";
+  amount: number;
+  status: "Pending" | "Approved" | "Rejected";
+  to?: string;
+  from?: string;
+}
 
 const Wallet: React.FC = () => {
-  const [walletInfo, setWalletInfo] = useState({
-    balance: 10.5, // Example balance
-    walletAddress: "0x1234567890abcdef1234567890abcdef12345678", // Example wallet address
+  const [walletInfo] = useState({
+    balance: 10.5,
+    walletAddress: "0x1234567890abcdef1234567890abcdef12345678",
+    fiatBalance: 19435.23, // USD equivalent
+    totalTransactions: 145,
+    pendingTransactions: 3,
   });
 
-  const [transactions, setTransactions] = useState(exampleTransactions);
-  const [activeTab, setActiveTab] = useState("Pending"); // Default tab
+  const [activeTab, setActiveTab] = useState("Pending");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dateFilter, setDateFilter] = useState("all");
+  const [copied, setCopied] = useState(false);
+  const [isDepositOpen, setIsDepositOpen] = useState(false);
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
 
-  // Fetch wallet info and transactions from API or backend
-  useEffect(() => {
-    // For now, using static data. Replace with an API call if needed.
-    // Example API call could be something like:
-    // fetchWalletInfo();
-    // fetchTransactions();
-  }, []);
+  const exampleTransactions: Transaction[] = [
+    {
+      id: "txn1",
+      date: "2024-11-01 14:30:25",
+      type: "Sent",
+      amount: 0.5,
+      status: "Pending",
+      to: "0xabcdef1234567890abcdef1234567890abcdef12",
+    },
+    {
+      id: "txn2",
+      date: "2024-11-02 09:15:10",
+      type: "Received",
+      amount: 1.2,
+      status: "Approved",
+      from: "0x9876543210abcdef9876543210abcdef98765432",
+    },
+    {
+      id: "txn3",
+      date: "2024-11-03 16:45:30",
+      type: "Sent",
+      amount: 2.0,
+      status: "Rejected",
+      to: "0xabcdef1234567890abcdef1234567890abcdef12",
+    },
+    {
+      id: "txn4",
+      date: "2024-11-04 16:45:30",
+      type: "Received",
+      amount: 0.5,
+      status: "Pending",
+      from: "0x9876543210abcdef9876543210abcdef98765432",
+    },
+    {
+      id: "txn5",
+      date: "2024-11-05 16:45:30",
+      type: "Sent",
+      amount: 0.5,
+      status: "Approved",
+      to: "0xabcdef1234567890abcdef1234567890abcdef12",
+    },
+    {
+      id: "txn6",
+      date: "2024-11-06 16:45:30",
+      type: "Received",
+      amount: 0.5,
+      status: "Rejected",
+      from: "0x9876543210abcdef9876543210abcdef98765432",
+    },
+  ];
 
-  // Filter transactions based on the status
+  const [transactions] = useState<Transaction[]>(exampleTransactions);
+
+  const handleCopyAddress = async () => {
+    await navigator.clipboard.writeText(walletInfo.walletAddress);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const getStatusIcon = (status: Transaction["status"]) => {
+    switch (status) {
+      case "Pending":
+        return <Clock className="w-4 h-4 text-yellow-500" />;
+      case "Approved":
+        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
+      case "Rejected":
+        return <XCircle className="w-4 h-4 text-red-500" />;
+    }
+  };
+
+  const getStatusBadge = (status: Transaction["status"]) => {
+    const statusStyles = {
+      Pending: "bg-yellow-500/10 text-yellow-500",
+      Approved: "bg-green-500/10 text-green-500",
+      Rejected: "bg-red-500/10 text-red-500",
+    };
+
+    return (
+      <Badge className={`${statusStyles[status]} flex items-center gap-1`}>
+        {getStatusIcon(status)}
+        {status}
+      </Badge>
+    );
+  };
+
   const filteredTransactions = transactions.filter(
-    (txn) => txn.status === activeTab
+    (txn) =>
+      txn.status === activeTab &&
+      (searchQuery === "" ||
+        txn.to?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        txn.from?.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
     <PageTemplate>
-      <div className="space-y-8">
-        {/* Wallet Info Section */}
-        <div className="bg-dark-200 p-6 rounded-lg shadow-md">
-          <Typography variant="h6" className="mb-2 font-semibold">
-            Wallet Balance
-          </Typography>
-          <Typography variant="body1" className="text-primary-500 text-2xl">
-            {walletInfo.balance} ETH
-          </Typography>
-        </div>
-
-        {/* Wallet Address Section */}
-        <div className="bg-dark-200 p-6 rounded-lg shadow-md">
-          <Typography variant="h6" className="mb-2 font-semibold">
-            Wallet Address
-          </Typography>
-          <div className="flex items-center">
-            <Typography variant="body1" className="text-primary-500 mr-4">
-              {walletInfo.walletAddress}
-            </Typography>
-            <button
-              onClick={() =>
-                navigator.clipboard.writeText(walletInfo.walletAddress)
-              }
-              className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-600"
-            >
-              Copy
-            </button>
-          </div>
-        </div>
-
-        {/* Transaction Tabs and Buttons (Half Screen Width & Centered) */}
-        <div className="w-1/2 mx-auto flex justify-between items-center bg-dark-300 p-4 rounded-lg mb-6">
-          {/* Transaction Tabs */}
-          <div className="flex space-x-4">
-            {["Pending", "Approved", "Rejected"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`text-white font-semibold px-4 py-2 rounded-lg transition ${
-                  activeTab === tab
-                    ? "bg-primary-500"
-                    : "bg-dark-400 hover:bg-primary-600"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          {/* Deposit & Withdraw Buttons */}
-          <div className="flex space-x-4">
-            <button className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">
-              Deposit
-            </button>
-            <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">
-              Withdraw
-            </button>
-          </div>
-        </div>
-
-        {/* Transaction History Section */}
-        <div className="bg-dark-200 p-6 rounded-lg shadow-md">
-          <Typography variant="h6" className="mb-4 font-semibold">
-            Transaction History
-          </Typography>
-          <div className="space-y-4">
-            {filteredTransactions.length > 0 ? (
-              filteredTransactions.map((txn) => (
-                <div key={txn.id} className="flex justify-between">
-                  <div>
-                    <Typography variant="body1" className="font-semibold">
-                      {txn.type} - {txn.date}
-                    </Typography>
-                    <Typography variant="body2" className="text-gray-400">
-                      {txn.type === "Sent"
-                        ? `To: ${txn.to}`
-                        : `From: ${txn.from}`}
-                    </Typography>
-                  </div>
-                  <div>
-                    <Typography
-                      variant="body1"
-                      className={`font-semibold ${
-                        txn.type === "Sent" ? "text-red-500" : "text-green-500"
-                      }`}
-                    >
-                      {txn.amount} ETH
-                    </Typography>
-                  </div>
+      <div className="max-w-7xl mx-auto space-y-6">
+        {/* Wallet Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Balance Card */}
+          <Card className="bg-gradient-to-br from-dark-200 to-dark-300">
+            <CardHeader>
+              <CardTitle className="text-lg font-medium text-gray-400">
+                Total Balance
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="text-3xl font-bold">
+                  {walletInfo.balance} ETH
                 </div>
-              ))
-            ) : (
-              <Typography variant="body1" className="text-gray-400">
-                No transactions to display
-              </Typography>
-            )}
+                <div className="text-gray-400">
+                  ${walletInfo.fiatBalance.toLocaleString()}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Wallet Address Card */}
+          <Card className="md:col-span-2">
+            <CardHeader>
+              <CardTitle className="text-lg font-medium text-gray-400">
+                Wallet Address
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center justify-between bg-dark-300 p-3 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <WalletIcon className="w-5 h-5 text-gray-400" />
+                  <span className="font-mono text-sm">
+                    {walletInfo.walletAddress.slice(0, 6)}...
+                    {walletInfo.walletAddress.slice(-4)}
+                  </span>
+                </div>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleCopyAddress}
+                  className="flex items-center gap-2"
+                >
+                  <Copy className="w-4 h-4" />
+                  {copied ? "Copied!" : "Copy"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Actions Bar */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            <Button onClick={() => setIsDepositOpen(true)}>
+              <ArrowDownRight className="w-4 h-4 mr-2" />
+              Deposit
+            </Button>
+            <Button onClick={() => setIsWithdrawOpen(true)}>
+              <ArrowUpRight className="w-4 h-4 mr-2" />
+              Withdraw
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-400">
+              {walletInfo.totalTransactions} transactions •{" "}
+              {walletInfo.pendingTransactions} pending
+            </span>
           </div>
         </div>
+
+        {/* Transactions Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Transactions</CardTitle>
+            <div className="flex items-center gap-4 mt-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Search transactions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full"
+                  prefix={<Search className="w-4 h-4 text-gray-400" />}
+                />
+              </div>
+              <Select value={dateFilter} onValueChange={setDateFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter by date" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Time</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="week">This Week</SelectItem>
+                  <SelectItem value="month">This Month</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="mb-4">
+                <TabsTrigger value="Pending">Pending</TabsTrigger>
+                <TabsTrigger value="Approved">Approved</TabsTrigger>
+                <TabsTrigger value="Rejected">Rejected</TabsTrigger>
+              </TabsList>
+
+              {["Pending", "Approved", "Rejected"].map((status) => (
+                <TabsContent key={status} value={status}>
+                  <div className="space-y-4">
+                    {filteredTransactions.length > 0 ? (
+                      filteredTransactions.map((txn) => (
+                        <div
+                          key={txn.id}
+                          className="flex items-center justify-between p-4 bg-dark-300 rounded-lg hover:bg-dark-400 transition-colors"
+                        >
+                          <div className="flex items-center gap-4">
+                            <div
+                              className={`p-2 rounded-full ${
+                                txn.type === "Sent"
+                                  ? "bg-red-500/10"
+                                  : "bg-green-500/10"
+                              }`}
+                            >
+                              {txn.type === "Sent" ? (
+                                <ArrowUpRight className="w-5 h-5 text-red-500" />
+                              ) : (
+                                <ArrowDownRight className="w-5 h-5 text-green-500" />
+                              )}
+                            </div>
+                            <div>
+                              <div className="font-medium">{txn.type}</div>
+                              <div className="text-sm text-gray-400">
+                                {new Date(txn.date).toLocaleString()}
+                              </div>
+                              <div className="text-xs text-gray-500 font-mono mt-1">
+                                {txn.type === "Sent"
+                                  ? `To: ${txn.to?.slice(
+                                      0,
+                                      6
+                                    )}...${txn.to?.slice(-4)}`
+                                  : `From: ${txn.from?.slice(
+                                      0,
+                                      6
+                                    )}...${txn.from?.slice(-4)}`}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            {getStatusBadge(txn.status)}
+                            <div className="text-right">
+                              <div
+                                className={`font-medium ${
+                                  txn.type === "Sent"
+                                    ? "text-red-500"
+                                    : "text-green-500"
+                                }`}
+                              >
+                                {txn.type === "Sent" ? "-" : "+"}
+                                {txn.amount} ETH
+                              </div>
+                              <div className="text-sm text-gray-400">
+                                ${(txn.amount * 1850).toLocaleString()}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-gray-400">
+                        No transactions found
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          </CardContent>
+        </Card>
       </div>
+      // Add the modals:
+      <TransactionModal
+        isOpen={isDepositOpen}
+        onClose={() => setIsDepositOpen(false)}
+        type="deposit"
+      />
+      <TransactionModal
+        isOpen={isWithdrawOpen}
+        onClose={() => setIsWithdrawOpen(false)}
+        type="withdraw"
+      />
     </PageTemplate>
   );
 };
