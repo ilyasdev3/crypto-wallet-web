@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageTemplate from "../../components/_layout";
 import Typography from "../../components/ui/Typography";
+import { CREATE_USER } from "../../graphql/user/mutation.user";
+import { useMutation } from "@apollo/client";
 
 const Signup: React.FC = () => {
   const [name, setName] = useState("");
@@ -11,6 +13,8 @@ const Signup: React.FC = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  const [createUser, { data, error: errorCreate, loading }] =
+    useMutation(CREATE_USER);
 
   // Handle file upload
   const handleProfilePictureChange = (
@@ -23,22 +27,61 @@ const Signup: React.FC = () => {
   };
 
   // Handle form submission
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !password || !profilePicture) {
       setError("All fields are required.");
       return;
     }
-    setError(""); // Reset error if no validation errors
 
-    // Simulate the form submission (API call)
+    // Convert profile picture to base64
+    const toBase64 = (file: File) =>
+      new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = (error) => reject(error);
+      });
+
     try {
-      // Here you can replace the below code with an actual API call to signup the user
-      // For example: await api.signup({ name, email, password, profilePicture });
+      const profilePictureBase64 = await toBase64(profilePicture);
+      setError(""); // Reset error if no validation errors
+
+      // Make API call using GraphQL mutation
+      createUser({
+        variables: {
+          user: {
+            name,
+            email,
+            password,
+            profilePicture: profilePictureBase64,
+          },
+        },
+        onError: (error) => {
+          console.log(error);
+          setError("Signup failed. Please try again.");
+        },
+        onCompleted: (data) => {
+          console.log(data);
+        },
+      });
+
+      if (error) {
+        console.log(error);
+        setError("Signup failed. Please try again.");
+      }
+      if (loading) {
+        console.log("Loading...");
+      }
+      if (data) {
+        console.log(data);
+      }
 
       // After successful signup, redirect to the dashboard or login page
-      navigate("/dashboard"); // Redirect to the dashboard page after signup
+      // navigate("/dashboard"); // Redirect to the dashboard page after signup
     } catch (error) {
+      console.log(error);
       setError("Signup failed. Please try again.");
     }
   };
