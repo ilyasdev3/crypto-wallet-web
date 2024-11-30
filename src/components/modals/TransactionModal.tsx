@@ -1,5 +1,4 @@
-// components/modals/TransactionModal.tsx
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,12 +15,22 @@ import {
   SelectContent,
   SelectItem,
 } from "../../components/ui/select";
-import { ArrowDownRight, ArrowUpRight, Info } from "lucide-react";
+import {
+  ArrowDownRight,
+  ArrowUpRight,
+  Info,
+  Copy,
+  Check,
+  ArrowRight,
+  Search,
+} from "lucide-react";
+import { showToast } from "../../utils/toastConfig";
 
 interface TransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  type: "deposit" | "withdraw";
+  type: "deposit" | "withdraw" | "transfer";
+  userWalletAddress?: string; // User's wallet address for deposit
 }
 
 interface TokenOption {
@@ -56,47 +65,197 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   isOpen,
   onClose,
   type,
+  userWalletAddress = "0x1234...5678", // Default value for demo
 }) => {
-  const [amount, setAmount] = React.useState("");
-  const [selectedToken, setSelectedToken] = React.useState<string>(
-    tokens[0].symbol
-  );
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [amount, setAmount] = useState("");
+  const [selectedToken, setSelectedToken] = useState<string>(tokens[0].symbol);
+  const [isLoading, setIsLoading] = useState(false);
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const [recipientUsername, setRecipientUsername] = useState("");
+  const [addressCopied, setAddressCopied] = useState(false);
+  const [isSearchingUser, setIsSearchingUser] = useState(false);
+  const [userFound, setUserFound] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate transaction
-    setTimeout(() => {
-      setIsLoading(false);
+
+    try {
+      // Validate inputs based on transaction type
+      if (type === "withdraw" && !recipientAddress) {
+        throw new Error("Please enter a valid wallet address");
+      }
+
+      if (type === "transfer" && !recipientUsername) {
+        throw new Error("Please enter a valid username");
+      }
+
+      if (!amount || parseFloat(amount) <= 0) {
+        throw new Error("Please enter a valid amount");
+      }
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      showToast.success(
+        `${type.charAt(0).toUpperCase() + type.slice(1)} successful!`
+      );
       onClose();
-    }, 2000);
+    } catch (error) {
+      showToast.error(
+        error instanceof Error ? error.message : "Transaction failed"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCopyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(userWalletAddress);
+      setAddressCopied(true);
+      setTimeout(() => setAddressCopied(false), 2000);
+      showToast.success("Address copied to clipboard!");
+    } catch (error) {
+      showToast.error("Failed to copy address");
+    }
+  };
+
+  const handleUsernameSearch = async () => {
+    if (!recipientUsername) return;
+
+    setIsSearchingUser(true);
+    try {
+      // Simulate API call to search user
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // For demo, assume user is found if username is longer than 3 chars
+      const found = recipientUsername.length > 3;
+      setUserFound(found);
+      if (!found) {
+        showToast.error("User not found");
+      }
+    } catch (error) {
+      showToast.error("Error searching for user");
+    } finally {
+      setIsSearchingUser(false);
+    }
   };
 
   const selectedTokenData = tokens.find((t) => t.symbol === selectedToken);
+
+  const renderTransactionFields = () => {
+    switch (type) {
+      case "deposit":
+        return (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-400">
+              Your Deposit Address
+            </label>
+            <div className="flex items-center gap-2">
+              <Input
+                value={userWalletAddress}
+                readOnly
+                className="font-mono text-sm text-white"
+              />
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleCopyAddress}
+                className="flex-shrink-0"
+              >
+                {addressCopied ? (
+                  <Check className="w-4 h-4 text-green-500" />
+                ) : (
+                  <Copy className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+            <p className="text-sm text-gray-400">
+              Send only {selectedToken} to this address
+            </p>
+          </div>
+        );
+
+      case "withdraw":
+        return (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-400">
+              Recipient Wallet Address
+            </label>
+            <Input
+              placeholder="Enter wallet address"
+              value={recipientAddress}
+              onChange={(e) => setRecipientAddress(e.target.value)}
+              className="font-mono text-sm text-white"
+            />
+          </div>
+        );
+
+      case "transfer":
+        return (
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-400">
+              Recipient Username
+            </label>
+            <div className="flex items-center gap-2">
+              <Input
+                placeholder="Enter username"
+                value={recipientUsername}
+                onChange={(e) => setRecipientUsername(e.target.value)}
+                className="text-sm text-white"
+              />
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={handleUsernameSearch}
+                // disabled={isSearchingUser}
+                className="flex-shrink-0"
+              >
+                <Search className="w-4 h-4" />
+              </Button>
+            </div>
+            {isSearchingUser && (
+              <p className="text-sm text-gray-400">Searching for user...</p>
+            )}
+            {userFound && (
+              <p className="text-sm text-green-500">User found! ✓</p>
+            )}
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-dark-50 border border-dark-100 sm:max-w-[425px]">
         <DialogHeader>
           <div className="flex items-center gap-2">
-            {type === "deposit" ? (
+            {type === "deposit" && (
               <div className="p-2 rounded-full bg-accent-success/10 text-accent-success">
                 <ArrowDownRight className="w-5 h-5" />
               </div>
-            ) : (
+            )}
+            {type === "withdraw" && (
               <div className="p-2 rounded-full bg-accent-error/10 text-accent-error">
                 <ArrowUpRight className="w-5 h-5" />
               </div>
             )}
+            {type === "transfer" && (
+              <div className="p-2 rounded-full bg-primary-500/10 text-primary-500">
+                <ArrowRight className="w-5 h-5" />
+              </div>
+            )}
             <DialogTitle className="text-xl font-bold text-white">
-              {type === "deposit" ? "Deposit" : "Withdraw"} Funds
+              {type.charAt(0).toUpperCase() + type.slice(1)} Funds
             </DialogTitle>
           </div>
           <DialogDescription>
-            {type === "deposit"
-              ? "Add funds to your wallet"
-              : "Withdraw funds from your wallet"}
+            {type === "deposit" && "Add funds to your wallet"}
+            {type === "withdraw" && "Withdraw funds to external wallet"}
+            {type === "transfer" && "Transfer funds to another user"}
           </DialogDescription>
         </DialogHeader>
 
@@ -138,6 +297,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             </Select>
           </div>
 
+          {/* Transaction Type Specific Fields */}
+          {renderTransactionFields()}
+
           {/* Amount Input */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-400">Amount</label>
@@ -147,7 +309,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                className="pr-20"
+                className="pr-20 text-white"
               />
               <button
                 type="button"
@@ -187,19 +349,19 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               Cancel
             </Button>
             <Button
+              // type="submit"
               variant={type === "deposit" ? "primary" : "secondary"}
               size="large"
               className="flex-1"
+              // disabled={isLoading || (type === "transfer" && !userFound)}
             >
               {isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                   <span>Processing...</span>
                 </div>
-              ) : type === "deposit" ? (
-                "Deposit"
               ) : (
-                "Withdraw"
+                type.charAt(0).toUpperCase() + type.slice(1)
               )}
             </Button>
           </div>
