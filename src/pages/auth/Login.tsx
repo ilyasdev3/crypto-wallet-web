@@ -1,34 +1,64 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import PageTemplate from "../../components/_layout";
 import Navbar from "../../components/Navbar"; // Assuming you have a Navbar component
 import Typography from "../../components/ui/Typography";
+import { LOGIN_USER } from "../../graphql/user/mutation.user";
+import { useMutation } from "@apollo/client";
+import { showToast } from "../../utils/toastConfig";
+import { useNavigate, useLocation } from "react-router-dom";
+import { resetApolloClient } from "../../graphqlClient";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+
+  const location = useLocation();
+  const from = (location.state as any)?.from || "/wallet";
+
+  const [loginUser, { loading: isSubmitting }] = useMutation(LOGIN_USER, {
+    onCompleted: async (data) => {
+      if (data.loginUser.token) {
+        // Store token
+        localStorage.setItem("walletToken", data.loginUser.token);
+
+        // Reset Apollo Client with new token
+        resetApolloClient();
+
+        showToast.success("Login successful");
+        navigate(from, { replace: true });
+      }
+    },
+    onError: (error) => {
+      console.error("Error logging in:", error);
+      showToast.error(error.message);
+    },
+  });
 
   const navigate = useNavigate();
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError("Both email and password are required.");
+    if (!username || !password) {
+      showToast.error("Both email and password are required.");
       return;
     }
-    setError(""); // Reset error if no validation errors
-
-    // Simulate the form submission (API call)
     try {
-      // Here you can replace the below code with an actual API call to login the user
-      // For example: await api.login({ email, password });
+      const variables = {
+        user: {
+          username,
+          password,
+        },
+      };
 
-      // After successful login, redirect to the dashboard or homepage
-      navigate("/dashboard"); // Redirect to the dashboard page after login
+      await loginUser({
+        variables,
+      });
+
+      navigate("/wallet");
     } catch (error) {
-      setError("Login failed. Please check your credentials and try again.");
+      showToast.error(
+        "Login failed. Please check your credentials and try again."
+      );
     }
   };
 
@@ -38,34 +68,27 @@ const Login: React.FC = () => {
         <Typography variant="h4" className="text-center mb-6">
           Log In to Your Account
         </Typography>
-
-        {/* Error Message */}
-        {error && (
-          <div className="text-red-500 text-center mb-4">
-            <Typography variant="body1">{error}</Typography>
-          </div>
-        )}
-
         <form onSubmit={handleSubmit}>
-          {/* Email Field */}
+          {/* username Field */}
+          <div className="mb-4"></div>
+          {/* Username Field */}
           <div className="mb-4">
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="block text-sm font-medium text-white mb-2"
             >
-              Email Address
+              Username
             </label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full p-3 bg-dark-100 text-white rounded-md"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               required
             />
           </div>
-
           {/* Password Field */}
           <div className="mb-4">
             <label
