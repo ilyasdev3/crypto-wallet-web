@@ -23,6 +23,7 @@ import {
   CheckCircle2,
   XCircle,
   Search,
+  ArrowRight,
 } from "lucide-react";
 import {
   Select,
@@ -55,6 +56,7 @@ const Wallet: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [isTransferOpen, setIsTransferOpen] = useState(false);
 
   const exampleTransactions: Transaction[] = [
     {
@@ -218,6 +220,10 @@ const Wallet: React.FC = () => {
               <ArrowUpRight className="w-4 h-4 mr-2" />
               Withdraw
             </Button>
+            <Button onClick={() => setIsTransferOpen(true)}>
+              <ArrowRight className="w-4 h-4 mr-2" />
+              Transfer
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-400">
@@ -345,6 +351,13 @@ const Wallet: React.FC = () => {
         isOpen={isWithdrawOpen}
         onClose={() => setIsWithdrawOpen(false)}
         type="withdraw"
+      />
+      <TransactionModal
+        isOpen={isTransferOpen}
+        onClose={() => setIsTransferOpen(false)}
+        type="transfer"
+        userWalletAddress={walletData?.getWallet.address}
+        // userWalletAddress="0x1234...5678"
       />
     </PageTemplate>
   );
