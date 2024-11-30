@@ -4,23 +4,11 @@ import { useQuery } from "@apollo/client";
 import { GET_USER } from "../graphql/user/queries.user";
 import { useState, useEffect } from "react";
 import { showToast } from "../utils/toastConfig";
+import Spinner from "../components/ui/Spinner";
+import { User } from "../types/user.types";
 
 interface AuthGuardProps {
   children: React.ReactNode;
-}
-
-interface User {
-  me: {
-    id: string;
-    username: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    profileImage: string;
-    isVerified: boolean;
-    createdAt: string;
-    updatedAt: string;
-  };
 }
 
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
@@ -56,11 +44,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
   }, [token, loading, error, data, isVerifying]);
 
   if (isVerifying || loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (!token || error || !data?.me) {
