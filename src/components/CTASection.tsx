@@ -21,7 +21,7 @@ const CTASection: React.FC = () => {
           </Button>
           <Button
             variant="outlined"
-            className="border-primary-500 text-primary-50 hover:bg-primary-50 hover:text-dark-50 font-semibold py-3 px-6 rounded-xl shadow-md"
+            className="border-primary-500 text-white hover:bg-primary-50 hover:text-dark-50 font-semibold py-3 px-6 rounded-xl shadow-md"
           >
             Learn More
           </Button>
