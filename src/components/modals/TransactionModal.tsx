@@ -89,7 +89,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                 <ArrowUpRight className="w-5 h-5" />
               </div>
             )}
-            <DialogTitle className="text-xl font-bold">
+            <DialogTitle className="text-xl font-bold text-white">
               {type === "deposit" ? "Deposit" : "Withdraw"} Funds
             </DialogTitle>
           </div>
@@ -166,11 +166,11 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                 <span>Network Fee</span>
                 <Info className="w-4 h-4" />
               </div>
-              <span>~$2.50</span>
+              <span className="text-white">~$2.50</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-400">You will receive</span>
-              <span className="font-medium">
+              <span className="font-medium text-white">
                 {amount || "0.00"} {selectedToken}
               </span>
             </div>
