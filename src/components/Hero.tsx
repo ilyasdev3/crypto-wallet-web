@@ -5,7 +5,6 @@ const Hero: React.FC = () => {
   return (
     <section className="bg-dark text-primary-50 py-16 px-8">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
-        {/* Hero Text */}
         <div className="md:w-1/2 space-y-6">
           <h1 className="text-4xl md:text-6xl font-bold text-primary-500">
             Manage Your Digital Assets with Ease
@@ -16,7 +15,7 @@ const Hero: React.FC = () => {
           </p>
           <div className="flex space-x-4 mt-4">
             <Link
-              to="/register"
+              to="/wallet"
               className="bg-primary-500 text-white px-6 py-3 rounded-lg shadow-glow hover:bg-primary-600 transition"
             >
               Get Started
@@ -30,10 +29,9 @@ const Hero: React.FC = () => {
           </div>
         </div>
 
-        {/* Hero Image */}
         <div className="md:w-1/2 mt-8 md:mt-0 flex justify-center md:justify-end">
           <img
-            src="../../public/crypto.jpg" // Replace with your actual image path
+            src="../../public/crypto_banner.png"
             alt="Crypto Wallet App"
             className="w-full h-full max-w-md md:max-w-lg shadow-card"
           />
