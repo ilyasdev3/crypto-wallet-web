@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom"; // Import NavLink
+import { Link, NavLink } from "react-router-dom";
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../graphql/user/queries.user";
 
-const Navbar: React.FC = () => {
-  // State to toggle the mobile menu
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleProfileMenu = () => {
+    setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
   const { loading, error, data } = useQuery(GET_USER);
@@ -20,7 +24,7 @@ const Navbar: React.FC = () => {
   }
 
   return (
-    <nav className="bg-dark p-4 shadow-md">
+    <nav className="bg-dark p-4 shadow-md relative">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="text-primary-200 text-2xl font-bold">
@@ -69,8 +73,6 @@ const Navbar: React.FC = () => {
           >
             Contact
           </NavLink>
-
-          {/* New Newsfeed Link */}
           <NavLink
             to="/newsfeed"
             className={({ isActive }) =>
@@ -85,13 +87,44 @@ const Navbar: React.FC = () => {
 
         {/* Auth Buttons for larger screens */}
         {data?.me?.id ? (
-          <div className="hidden md:flex items-center space-x-4">
-            <Link
-              to="/profile"
-              className="text-white hover:text-primary-300 transition"
+          <div className="hidden md:flex items-center space-x-4 relative">
+            <button
+              onClick={toggleProfileMenu}
+              className="relative focus:outline-none"
             >
-              <Typography variant="body1">Profile</Typography>
-            </Link>
+              <img
+                src={data.me.profileImage || "/api/placeholder/40/40"}
+                alt="Profile"
+                className="w-10 h-10 rounded-full object-cover border-2 border-primary-500 hover:border-primary-400 transition-colors"
+              />
+              {/* Profile Dropdown Menu */}
+              {isProfileMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-dark-200 rounded-lg shadow-lg py-2 z-50">
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-white hover:bg-dark-100 transition"
+                  >
+                    View Profile
+                  </Link>
+                  <Link
+                    to="/settings"
+                    className="block px-4 py-2 text-white hover:bg-dark-100 transition"
+                  >
+                    Settings
+                  </Link>
+                  <hr className="my-2 border-dark-100" />
+                  <button
+                    onClick={() => {
+                      // Add logout logic here
+                      console.log("Logout clicked");
+                    }}
+                    className="block w-full text-left px-4 py-2 text-red-500 hover:bg-dark-100 transition"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </button>
           </div>
         ) : (
           <div className="hidden md:flex items-center space-x-4">
@@ -114,11 +147,18 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Menu Icon */}
         <div className="md:hidden flex items-center">
+          {data?.me?.id && (
+            <img
+              src={data.me.profileImage || "/api/placeholder/32/32"}
+              alt="Profile"
+              className="w-8 h-8 rounded-full object-cover border-2 border-primary-500 mr-4"
+            />
+          )}
           <button
             onClick={toggleMenu}
             className="text-primary-500 focus:outline-none"
           >
-            <span className="text-2xl">☰</span> {/* Simple hamburger icon */}
+            <span className="text-2xl">☰</span>
           </button>
         </div>
       </div>
@@ -131,7 +171,7 @@ const Navbar: React.FC = () => {
       >
         <div className="flex justify-end mb-8">
           <button onClick={toggleMenu} className="text-primary-500 text-3xl">
-            ✖ {/* Close icon */}
+            ✖
           </button>
         </div>
 
@@ -159,7 +199,7 @@ const Navbar: React.FC = () => {
             <Typography variant="h6">Features</Typography>
           </NavLink>
           <NavLink
-            to="/pricing"
+            to="/wallet"
             className={({ isActive }) =>
               isActive
                 ? "text-primary-400 text-2xl transition"
@@ -167,7 +207,7 @@ const Navbar: React.FC = () => {
             }
             onClick={toggleMenu}
           >
-            <Typography variant="h6">Pricing</Typography>
+            <Typography variant="h6">Wallet</Typography>
           </NavLink>
           <NavLink
             to="/contact"
@@ -180,8 +220,6 @@ const Navbar: React.FC = () => {
           >
             <Typography variant="h6">Contact</Typography>
           </NavLink>
-
-          {/* New Newsfeed Link in Mobile Menu */}
           <NavLink
             to="/newsfeed"
             className={({ isActive }) =>
@@ -196,7 +234,7 @@ const Navbar: React.FC = () => {
 
           {/* Auth Buttons for mobile */}
           {data?.me?.id ? (
-            <div className="flex items-center justify-center flex-col space-y-6 ">
+            <div className="flex items-center justify-center flex-col space-y-6">
               <Link
                 to="/profile"
                 className="block text-white text-2xl hover:text-primary-300 transition"
@@ -204,9 +242,18 @@ const Navbar: React.FC = () => {
               >
                 <Typography variant="h6">Profile</Typography>
               </Link>
+              <button
+                onClick={() => {
+                  // Add logout logic here
+                  console.log("Logout clicked");
+                }}
+                className="text-red-500 text-2xl hover:text-red-400 transition"
+              >
+                <Typography variant="h6">Logout</Typography>
+              </button>
             </div>
           ) : (
-            <div className="flex items-center justify-center flex-col space-y-6 ">
+            <div className="flex items-center justify-center flex-col space-y-6">
               <Link
                 to="/login"
                 className="block text-white text-2xl hover:text-primary-300 transition"
