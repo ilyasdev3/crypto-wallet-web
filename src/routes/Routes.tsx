@@ -12,6 +12,7 @@ import Signup from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
 import CryptoListPage from "../pages/public/CryptoList";
 import CryptoDetail from "../pages/public/CryptoDetail";
+import NotFound from "../pages/public/NotFound";
 
 const RoutesComponent = () => {
   return (
@@ -51,7 +52,7 @@ const RoutesComponent = () => {
         }
       />
 
-      <Route path="*" element={<h1>Page Not Found</h1>} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
