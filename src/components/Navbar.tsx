@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, NavLink } from "react-router-dom"; // Import NavLink
 import Button from "./ui/Button";
 import Typography from "./ui/Typography";
+import { useQuery } from "@apollo/client";
+import { GET_USER } from "../graphql/user/queries.user";
 
 const Navbar: React.FC = () => {
   // State to toggle the mobile menu
@@ -10,6 +12,12 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const { loading, error, data } = useQuery(GET_USER);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <nav className="bg-dark p-4 shadow-md">
@@ -76,22 +84,33 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* Auth Buttons for larger screens */}
-        <div className="hidden md:flex space-x-4">
-          <Link
-            to="/login"
-            className="text-white hover:text-primary-300 transition"
-          >
-            <Typography variant="body1">Log in</Typography>
-          </Link>
-          <Button
-            to="/register"
-            className="bg-primary-500 text-white px-4 py-2 rounded-lg shadow-glow hover:bg-primary-600 transition"
-            variant="primary"
-            size="medium"
-          >
-            Sign Up
-          </Button>
-        </div>
+        {data?.me?.id ? (
+          <div className="hidden md:flex items-center space-x-4">
+            <Link
+              to="/profile"
+              className="text-white hover:text-primary-300 transition"
+            >
+              <Typography variant="body1">Profile</Typography>
+            </Link>
+          </div>
+        ) : (
+          <div className="hidden md:flex items-center space-x-4">
+            <Link
+              to="/login"
+              className="text-white hover:text-primary-300 transition"
+            >
+              <Typography variant="body1">Log in</Typography>
+            </Link>
+            <Button
+              to="/register"
+              className="bg-primary-500 text-white px-4 py-2 rounded-lg shadow-glow hover:bg-primary-600 transition"
+              variant="primary"
+              size="medium"
+            >
+              Sign Up
+            </Button>
+          </div>
+        )}
 
         {/* Mobile Menu Icon */}
         <div className="md:hidden flex items-center">
@@ -99,7 +118,7 @@ const Navbar: React.FC = () => {
             onClick={toggleMenu}
             className="text-primary-500 focus:outline-none"
           >
-            <span>☰</span> {/* Simple hamburger icon */}
+            <span className="text-2xl">☰</span> {/* Simple hamburger icon */}
           </button>
         </div>
       </div>
@@ -176,24 +195,36 @@ const Navbar: React.FC = () => {
           </NavLink>
 
           {/* Auth Buttons for mobile */}
-          <div className="space-y-6">
-            <Link
-              to="/login"
-              className="block text-white text-2xl hover:text-primary-300 transition"
-              onClick={toggleMenu}
-            >
-              <Typography variant="h6">Log in</Typography>
-            </Link>
-            <Button
-              to="/register"
-              className="block bg-primary-500 text-white px-4 py-2 rounded-lg shadow-glow hover:bg-primary-600 transition"
-              variant="primary"
-              size="medium"
-              onClick={toggleMenu}
-            >
-              Sign Up
-            </Button>
-          </div>
+          {data?.me?.id ? (
+            <div className="flex items-center justify-center flex-col space-y-6 ">
+              <Link
+                to="/profile"
+                className="block text-white text-2xl hover:text-primary-300 transition"
+                onClick={toggleMenu}
+              >
+                <Typography variant="h6">Profile</Typography>
+              </Link>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center flex-col space-y-6 ">
+              <Link
+                to="/login"
+                className="block text-white text-2xl hover:text-primary-300 transition"
+                onClick={toggleMenu}
+              >
+                <Typography variant="h6">Log in</Typography>
+              </Link>
+              <Button
+                to="/register"
+                className="block bg-primary-500 text-white px-4 py-2 rounded-lg shadow-glow hover:bg-primary-600 transition"
+                variant="primary"
+                size="medium"
+                onClick={toggleMenu}
+              >
+                Sign Up
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </nav>
