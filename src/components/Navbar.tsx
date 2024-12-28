@@ -4,6 +4,7 @@ import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../graphql/user/queries.user";
+import ProfileDropdownNavbar from "./ProfileDropdown.Navbar";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -98,32 +99,7 @@ const Navbar = () => {
                 className="w-10 h-10 rounded-full object-cover border-2 border-primary-500 hover:border-primary-400 transition-colors"
               />
               {/* Profile Dropdown Menu */}
-              {isProfileMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-dark-200 rounded-lg shadow-lg py-2 z-50">
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-white hover:bg-dark-100 transition"
-                  >
-                    View Profile
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-white hover:bg-dark-100 transition"
-                  >
-                    Settings
-                  </Link>
-                  <hr className="my-2 border-dark-100" />
-                  <button
-                    onClick={() => {
-                      // Add logout logic here
-                      console.log("Logout clicked");
-                    }}
-                    className="block w-full text-left px-4 py-2 text-red-500 hover:bg-dark-100 transition"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
+              {isProfileMenuOpen && <ProfileDropdownNavbar />}
             </button>
           </div>
         ) : (

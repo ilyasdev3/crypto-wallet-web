@@ -30,11 +30,9 @@ const features = [
 
 const Features: React.FC = () => {
   return (
-    <section className="bg-dark py-16 px-8">
+    <section className="bg-dark text-white py-16 px-8">
       <div className="container mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-primary-500 mb-8">
-          Key Features
-        </h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-8">Key Features</h2>
         <p className="text-lg text-primary-200 mb-12 max-w-2xl mx-auto">
           Explore the powerful features that make managing your crypto assets
           easier and more secure.

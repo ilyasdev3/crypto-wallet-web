@@ -6,7 +6,7 @@ const Hero: React.FC = () => {
     <section className="bg-dark text-primary-50 py-16 px-8">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between">
         <div className="md:w-1/2 space-y-6">
-          <h1 className="text-4xl md:text-6xl font-bold text-primary-500">
+          <h1 className="text-4xl md:text-6xl font-bold ">
             Manage Your Digital Assets with Ease
           </h1>
           <p className="text-lg md:text-xl text-primary-200">

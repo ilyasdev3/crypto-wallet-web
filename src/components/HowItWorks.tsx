@@ -26,11 +26,9 @@ const steps = [
 
 const HowItWorks: React.FC = () => {
   return (
-    <section className="bg-dark py-16 px-8">
+    <section className="bg-dark py-16 px-8 text-white">
       <div className="container mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-primary-500 mb-8">
-          How It Works
-        </h2>
+        <h2 className="text-3xl md:text-4xl font-bold  mb-8">How It Works</h2>
         <p className="text-lg text-primary-200 mb-12 max-w-2xl mx-auto">
           Our wallet app is designed to be secure, fast, and user-friendly.
           Follow these simple steps to start using it.
