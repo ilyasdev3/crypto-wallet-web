@@ -77,11 +77,11 @@ const Features = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-dark-300 py-16">
+    <div className="min-h-screen bg-dark-300 py-16 text-white">
       {/* Hero Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4  bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
             Powerful Features for Modern Crypto Trading
           </h1>
           <p className="text-gray-300 max-w-2xl mx-auto text-lg">
