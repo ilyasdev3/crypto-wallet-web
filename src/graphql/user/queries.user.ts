@@ -20,3 +20,17 @@ export const GET_USER = gql`
     }
   }
 `;
+
+export const GET_USER_WITH_NAME = gql`
+  query Query($username: String!) {
+    getUserWithName(username: $username) {
+      message
+      user {
+        username
+        address
+        firstName
+        lastName
+      }
+    }
+  }
+`;
