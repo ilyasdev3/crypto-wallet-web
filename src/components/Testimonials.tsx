@@ -29,7 +29,7 @@ const Testimonials: React.FC = () => {
   return (
     <section className="bg-dark-50 py-16 px-8">
       <div className="container mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-primary-500 mb-8">
+        <h2 className="text-3xl md:text-4xl font-bold  mb-8">
           What Our Users Say
         </h2>
         <p className="text-lg text-primary-200 mb-12 max-w-2xl mx-auto">
