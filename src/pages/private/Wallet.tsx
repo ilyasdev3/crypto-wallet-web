@@ -35,9 +35,10 @@ import {
 import { Input } from "../../components/ui/input";
 
 import TransactionModal from "../../components/modals/TransactionModal";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_WALLET } from "../../graphql/wallet/query.wallet";
-import Spinner from "../../components/ui/Spinner";
+
+// import Spinner from "../../components/ui/Spinner";
 
 interface Transaction {
   id: string;
@@ -110,8 +111,6 @@ const Wallet: React.FC = () => {
   ];
 
   const { data: walletData, loading: isLoading } = useQuery(GET_WALLET);
-
-  // if (isLoading) return <Spinner />;
 
   const [transactions] = useState<Transaction[]>(exampleTransactions);
 
@@ -212,10 +211,10 @@ const Wallet: React.FC = () => {
         {/* Actions Bar */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
-            <Button onClick={() => setIsDepositOpen(true)}>
+            {/* <Button onClick={() => setIsDepositOpen(true)}>
               <ArrowDownRight className="w-4 h-4 mr-2" />
               Deposit
-            </Button>
+            </Button> */}
             <Button onClick={() => setIsWithdrawOpen(true)}>
               <ArrowUpRight className="w-4 h-4 mr-2" />
               Withdraw
@@ -341,7 +340,6 @@ const Wallet: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-      // Add the modals:
       <TransactionModal
         isOpen={isDepositOpen}
         onClose={() => setIsDepositOpen(false)}
