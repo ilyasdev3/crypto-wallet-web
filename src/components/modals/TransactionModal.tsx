@@ -25,12 +25,18 @@ import {
   Search,
 } from "lucide-react";
 import { showToast } from "../../utils/toastConfig";
+import { useLazyQuery, useQuery, useMutation } from "@apollo/client";
+import { GET_USER_WITH_NAME } from "../../graphql/user/queries.user";
+import {
+  TRANSFER_FUNDS,
+  WITHDRAW_FUNDS,
+} from "../../graphql/wallet/mutation.wallet";
 
 interface TransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
   type: "deposit" | "withdraw" | "transfer";
-  userWalletAddress?: string; // User's wallet address for deposit
+  userWalletAddress?: string;
 }
 
 interface TokenOption {
@@ -76,6 +82,67 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const [isSearchingUser, setIsSearchingUser] = useState(false);
   const [userFound, setUserFound] = useState(false);
 
+  const [getUserWithName, { loading }] = useLazyQuery(GET_USER_WITH_NAME, {
+    onCompleted: (data) => {
+      if (data?.getUserWithName.user) {
+        console.log("data.getUserWithName", data.getUserWithName);
+        setUserFound(true);
+        setRecipientAddress(data.getUserWithName.user.address);
+        setRecipientAddress(data.getUserWithName.address);
+        // showToast.success("User found successfully");
+      } else {
+        setUserFound(false);
+        showToast.error("User not found");
+      }
+      setIsSearchingUser(false);
+    },
+    onError: (error) => {
+      setUserFound(false);
+      setIsSearchingUser(false);
+      showToast.error(error.message || "Failed to find user");
+    },
+  });
+
+  const [transferFunds, { loading: isTransferring }] = useMutation(
+    TRANSFER_FUNDS,
+    {
+      onCompleted: (data) => {
+        showToast.success(data.transferFunds.message);
+        onClose();
+      },
+      onError: (error) => {
+        showToast.error(error.message);
+      },
+    }
+  );
+
+  const [withdrawFunds, { loading: isWithdrawing }] = useMutation(
+    WITHDRAW_FUNDS,
+    {
+      onCompleted: (data) => {
+        showToast.success(data.withdrawFunds.message);
+        onClose();
+      },
+      onError: (error) => {
+        showToast.error(error.message);
+      },
+    }
+  );
+
+  const handleUsernameSearch = async () => {
+    if (!recipientUsername.trim()) {
+      showToast.error("Please enter a username");
+      return;
+    }
+
+    setIsSearchingUser(true);
+    setUserFound(false);
+
+    await getUserWithName({
+      variables: { username: recipientUsername.trim() },
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -89,18 +156,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       if (type === "transfer" && !recipientUsername) {
         throw new Error("Please enter a valid username");
       }
-
-      if (!amount || parseFloat(amount) <= 0) {
-        throw new Error("Please enter a valid amount");
+      if (type === "transfer" && !recipientAddress) {
+        await handleUsernameSearch();
       }
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      showToast.success(
-        `${type.charAt(0).toUpperCase() + type.slice(1)} successful!`
-      );
-      onClose();
     } catch (error) {
       showToast.error(
         error instanceof Error ? error.message : "Transaction failed"
@@ -118,26 +176,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       showToast.success("Address copied to clipboard!");
     } catch (error) {
       showToast.error("Failed to copy address");
-    }
-  };
-
-  const handleUsernameSearch = async () => {
-    if (!recipientUsername) return;
-
-    setIsSearchingUser(true);
-    try {
-      // Simulate API call to search user
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      // For demo, assume user is found if username is longer than 3 chars
-      const found = recipientUsername.length > 3;
-      setUserFound(found);
-      if (!found) {
-        showToast.error("User not found");
-      }
-    } catch (error) {
-      showToast.error("Error searching for user");
-    } finally {
-      setIsSearchingUser(false);
     }
   };
 
@@ -207,7 +245,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               <Button
                 variant="outlined"
                 size="small"
-                onClick={handleUsernameSearch}
+                // onClick={handleUsernameSearch}
+
                 // disabled={isSearchingUser}
                 className="flex-shrink-0"
               >
@@ -225,6 +264,36 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 
       default:
         return null;
+    }
+  };
+
+  const handleTransferFunds = async () => {
+    try {
+      await transferFunds({
+        variables: {
+          transferFunds: {
+            amount: amount,
+            username: recipientUsername,
+          },
+        },
+      });
+    } catch (error: any) {
+      showToast.error(error.message);
+    }
+  };
+
+  const handleWithdrawFunds = async () => {
+    try {
+      await withdrawFunds({
+        variables: {
+          withdrawFunds: {
+            amount: amount,
+            address: recipientAddress,
+          },
+        },
+      });
+    } catch (error: any) {
+      showToast.error(error.message);
     }
   };
 
@@ -259,7 +328,12 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form
+          onSubmit={(e) => {
+            handleSubmit(e);
+          }}
+          className="space-y-6"
+        >
           {/* Token Selection */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-400">
@@ -301,28 +375,28 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           {renderTransactionFields()}
 
           {/* Amount Input */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="text-sm font-medium text-gray-400">Amount</label>
-            <div className="relative">
-              <Input
-                type="number"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="pr-20 text-white"
-              />
-              <button
+            {/* <div className="relative"> */}
+            <Input
+              type="number"
+              placeholder="0.00"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="text-white"
+            />
+            {/* <button
                 type="button"
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-primary-500 font-medium hover:text-primary-400"
                 onClick={() => setAmount(selectedTokenData?.balance || "0")}
               >
                 MAX
-              </button>
-            </div>
+              </button> */}
+            {/* </div> */}
           </div>
 
           {/* Network Fee Estimate */}
-          <div className="p-3 bg-dark-100 rounded-lg space-y-2">
+          {/* <div className="p-3 bg-dark-100 rounded-lg space-y-2">
             <div className="flex items-center justify-between text-sm">
               <div className="flex items-center gap-1 text-gray-400">
                 <span>Network Fee</span>
@@ -336,7 +410,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                 {amount || "0.00"} {selectedToken}
               </span>
             </div>
-          </div>
+          </div> */}
 
           {/* Action Buttons */}
           <div className="flex gap-3">
@@ -353,6 +427,10 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               variant={type === "deposit" ? "primary" : "secondary"}
               size="large"
               className="flex-1"
+              onClick={
+                type === "deposit" ? handleTransferFunds : handleWithdrawFunds
+              }
+
               // disabled={isLoading || (type === "transfer" && !userFound)}
             >
               {isLoading ? (
