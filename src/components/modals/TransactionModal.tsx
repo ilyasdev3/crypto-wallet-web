@@ -428,7 +428,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               size="large"
               className="flex-1"
               onClick={
-                type === "deposit" ? handleTransferFunds : handleWithdrawFunds
+                type === "transfer" ? handleTransferFunds : handleWithdrawFunds
               }
 
               // disabled={isLoading || (type === "transfer" && !userFound)}
