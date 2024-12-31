@@ -13,6 +13,7 @@ import Login from "../pages/auth/Login";
 import CryptoListPage from "../pages/public/CryptoList";
 import CryptoDetail from "../pages/public/CryptoDetail";
 import NotFound from "../pages/public/NotFound";
+import EditProfilePage from "../pages/private/EditProfile";
 
 const RoutesComponent = () => {
   return (
@@ -40,6 +41,14 @@ const RoutesComponent = () => {
         element={
           <AuthGuard>
             <ProfilePage />
+          </AuthGuard>
+        }
+      />
+      <Route
+        path="/edit-profile/:name"
+        element={
+          <AuthGuard>
+            <EditProfilePage />
           </AuthGuard>
         }
       />
