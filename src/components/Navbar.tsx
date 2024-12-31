@@ -5,6 +5,7 @@ import Typography from "./ui/Typography";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../graphql/user/queries.user";
 import ProfileDropdownNavbar from "./ProfileDropdown.Navbar";
+import { ensureHttps } from "../utils/imageUrlChecker";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -94,7 +95,9 @@ const Navbar = () => {
               className="relative focus:outline-none"
             >
               <img
-                src={data.me.profileImage || "/api/placeholder/40/40"}
+                src={
+                  ensureHttps(data.me.profileImage) || "/api/placeholder/40/40"
+                }
                 alt="Profile"
                 className="w-10 h-10 rounded-full object-cover border-2 border-primary-500 hover:border-primary-400 transition-colors"
               />
