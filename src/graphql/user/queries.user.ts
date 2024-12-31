@@ -15,6 +15,7 @@ export const GET_USER = gql`
       lastName
       phone
       profileImage
+      coverImage
       updatedAt
       username
     }
