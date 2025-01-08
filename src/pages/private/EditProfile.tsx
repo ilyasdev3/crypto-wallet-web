@@ -11,11 +11,12 @@ const EditProfilePage = () => {
   const navigate = useNavigate();
   const { userId } = useParams(); // Get the user ID from the URL
   const [profile, setProfile] = useState({
-    firstName: "Sarah",
-    lastName: "Anderson",
+    firstName: "",
+    lastName: "",
     avatar: null,
     coverPhoto: null,
-    bio: "Passionate software engineer with expertise in full-stack development.",
+    bio: "",
+    email: "",
   });
 
   const [previewUrls, setPreviewUrls] = useState({
@@ -37,6 +38,7 @@ const EditProfilePage = () => {
         avatar: null,
         coverPhoto: null,
         bio: data.me.bio,
+        email: data.me.email,
       });
       setPreviewUrls({
         avatar: data.me.avatar,
@@ -130,6 +132,7 @@ const EditProfilePage = () => {
           firstName: profile.firstName,
           lastName: profile.lastName,
           bio: profile.bio,
+          email: profile.email,
           ...(avatarBase64 && { profileImage: avatarBase64 }),
           ...(coverPhotoBase64 && { coverImage: coverPhotoBase64 }),
         },
@@ -162,6 +165,54 @@ const EditProfilePage = () => {
 
       <div className="max-w-3xl mx-auto mt-16 p-6 bg-dark-200 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold text-white mb-6">Edit Profile</h1>
+
+        {/* First Name */}
+        <div className="mb-6">
+          <label className="text-gray-400 mb-2 block">First Name</label>
+          <input
+            type="text"
+            name="firstName"
+            value={profile.firstName}
+            onChange={handleInputChange}
+            className="w-full p-3 rounded-lg bg-dark-100 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </div>
+
+        {/* Last Name */}
+        <div className="mb-6">
+          <label className="text-gray-400 mb-2 block">Last Name</label>
+          <input
+            type="text"
+            name="lastName"
+            value={profile.lastName}
+            onChange={handleInputChange}
+            className="w-full p-3 rounded-lg bg-dark-100 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </div>
+
+        {/* email */}
+        <div className="mb-6">
+          <label className="text-gray-400 mb-2 block">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={profile.email}
+            onChange={handleInputChange}
+            // disabled
+            className="w-full p-3 rounded-lg bg-dark-100 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+        </div>
+
+        {/* Bio */}
+        <div className="mb-6">
+          <label className="text-gray-400 mb-2 block">Bio</label>
+          <textarea
+            name="bio"
+            value={profile.bio}
+            onChange={handleInputChange}
+            className="w-full p-3 rounded-lg bg-dark-100 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+          ></textarea>
+        </div>
 
         {/* Cover Photo Upload */}
         <div className="mb-6">
@@ -203,41 +254,6 @@ const EditProfilePage = () => {
             onChange={handleFileChange}
             className="w-full p-3 rounded-lg bg-dark-100 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
-        </div>
-
-        {/* First Name */}
-        <div className="mb-6">
-          <label className="text-gray-400 mb-2 block">First Name</label>
-          <input
-            type="text"
-            name="firstName"
-            value={profile.firstName}
-            onChange={handleInputChange}
-            className="w-full p-3 rounded-lg bg-dark-100 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </div>
-
-        {/* Last Name */}
-        <div className="mb-6">
-          <label className="text-gray-400 mb-2 block">Last Name</label>
-          <input
-            type="text"
-            name="lastName"
-            value={profile.lastName}
-            onChange={handleInputChange}
-            className="w-full p-3 rounded-lg bg-dark-100 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-          />
-        </div>
-
-        {/* Bio */}
-        <div className="mb-6">
-          <label className="text-gray-400 mb-2 block">Bio</label>
-          <textarea
-            name="bio"
-            value={profile.bio}
-            onChange={handleInputChange}
-            className="w-full p-3 rounded-lg bg-dark-100 text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-          ></textarea>
         </div>
 
         {/* Action Buttons */}
