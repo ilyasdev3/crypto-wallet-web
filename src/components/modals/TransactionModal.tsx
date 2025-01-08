@@ -31,6 +31,7 @@ import {
   TRANSFER_FUNDS,
   WITHDRAW_FUNDS,
 } from "../../graphql/wallet/mutation.wallet";
+import { GET_USER_TRANSACTIONS } from "../../graphql/transaction/query.transaction";
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -81,25 +82,34 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const [addressCopied, setAddressCopied] = useState(false);
   const [isSearchingUser, setIsSearchingUser] = useState(false);
   const [userFound, setUserFound] = useState(false);
+  const [userNotFound, setUserNotFound] = useState(false);
+
+  const { refetch } = useQuery(GET_USER_TRANSACTIONS, {
+    variables: { input: { type: "pending" } },
+  });
 
   const [getUserWithName, { loading }] = useLazyQuery(GET_USER_WITH_NAME, {
     onCompleted: (data) => {
       if (data?.getUserWithName.user) {
         console.log("data.getUserWithName", data.getUserWithName);
         setUserFound(true);
+        setUserNotFound(false);
         setRecipientAddress(data.getUserWithName.user.address);
         setRecipientAddress(data.getUserWithName.address);
+
         // showToast.success("User found successfully");
       } else {
         setUserFound(false);
-        showToast.error("User not found");
+        setUserNotFound(true);
+        // showToast.error("User not found");
       }
       setIsSearchingUser(false);
     },
     onError: (error) => {
-      setUserFound(false);
       setIsSearchingUser(false);
-      showToast.error(error.message || "Failed to find user");
+      setUserFound(false);
+      setUserNotFound(true);
+      // showToast.error(error.message || "Failed to find user");
     },
   });
 
@@ -121,6 +131,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     {
       onCompleted: (data) => {
         showToast.success(data.withdrawFunds.message);
+        refetch();
         onClose();
       },
       onError: (error) => {
@@ -258,6 +269,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             )}
             {userFound && (
               <p className="text-sm text-green-500">User found! ✓</p>
+            )}
+            {userNotFound && (
+              <p className="text-sm text-red-500">User not found! ✗</p>
             )}
           </div>
         );
