@@ -11,6 +11,7 @@ import {
   Lock,
 } from "lucide-react";
 import Button from "../../components/ui/Button";
+import PageTemplate from "../../components/_layout";
 
 const FeatureCard = ({ icon: Icon, title, description }: any) => (
   <Card className="bg-dark-200 hover:bg-dark-100 transition-colors duration-300 border-none">
@@ -77,50 +78,52 @@ const Features = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-dark-300 py-16 text-white">
-      {/* Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
-            Powerful Features for Modern Crypto Trading
-          </h1>
-          <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-            Experience the next generation of cryptocurrency management with our
-            comprehensive suite of trading and security features.
-          </p>
+    <PageTemplate>
+      <div className="min-h-screen text-white">
+        {/* Hero Section */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
+              Powerful Features for Modern Crypto Trading
+            </h1>
+            <p className="text-gray-300 max-w-2xl mx-auto text-lg">
+              Experience the next generation of cryptocurrency management with
+              our comprehensive suite of trading and security features.
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* Features Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((feature, index) => (
-            <FeatureCard key={index} {...feature} />
-          ))}
+        {/* Features Grid */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => (
+              <FeatureCard key={index} {...feature} />
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Bottom CTA */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        <div className="bg-gradient-to-r from-primary-500/10 to-primary-600/10 rounded-2xl p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4 text-white">
-            Ready to Get Started?
-          </h2>
-          <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-            Join thousands of traders who have already discovered the power of
-            our platform.
-          </p>
-          <Button
-            to="/wallet"
-            variant="primary"
-            size="large"
-            className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg transition-colors duration-300"
-          >
-            Get Started
-          </Button>
+        {/* Bottom CTA */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
+          <div className="bg-gradient-to-r from-primary-500/10 to-primary-600/10 rounded-2xl p-8 text-center">
+            <h2 className="text-2xl font-bold mb-4 text-white">
+              Ready to Get Started?
+            </h2>
+            <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+              Join thousands of traders who have already discovered the power of
+              our platform.
+            </p>
+            <Button
+              to="/wallet"
+              variant="primary"
+              size="large"
+              className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg transition-colors duration-300"
+            >
+              Get Started
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </PageTemplate>
   );
 };
 
