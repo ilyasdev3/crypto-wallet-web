@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageTemplate from "../../components/_layout";
 import {
   Card,
@@ -39,6 +39,8 @@ import { useQuery, useMutation } from "@apollo/client";
 import { GET_WALLET } from "../../graphql/wallet/query.wallet";
 import { GET_USER_TRANSACTIONS } from "../../graphql/transaction/query.transaction";
 import { GET_USER } from "../../graphql/user/queries.user";
+import { showToast } from "../../utils/toastConfig";
+import { useSocket } from "../../hooks/useTransactionSocket";
 
 // import Spinner from "../../components/ui/Spinner";
 
@@ -61,67 +63,44 @@ const Wallet: React.FC = () => {
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [isTransferOpen, setIsTransferOpen] = useState(false);
 
-  // const exampleTransactions: Transaction[] = [
-  //   {
-  //     id: "txn1",
-  //     date: "2024-11-01 14:30:25",
-  //     type: "Sent",
-  //     amount: 0.5,
-  //     status: "Pending",
-  //     to: "0xabcdef1234567890abcdef1234567890abcdef12",
-  //   },
-  //   {
-  //     id: "txn2",
-  //     date: "2024-11-02 09:15:10",
-  //     type: "Received",
-  //     amount: 1.2,
-  //     status: "Approved",
-  //     from: "0x9876543210abcdef9876543210abcdef98765432",
-  //   },
-  //   {
-  //     id: "txn3",
-  //     date: "2024-11-03 16:45:30",
-  //     type: "Sent",
-  //     amount: 2.0,
-  //     status: "Rejected",
-  //     to: "0xabcdef1234567890abcdef1234567890abcdef12",
-  //   },
-  //   {
-  //     id: "txn4",
-  //     date: "2024-11-04 16:45:30",
-  //     type: "Received",
-  //     amount: 0.5,
-  //     status: "Pending",
-  //     from: "0x9876543210abcdef9876543210abcdef98765432",
-  //   },
-  //   {
-  //     id: "txn5",
-  //     date: "2024-11-05 16:45:30",
-  //     type: "Sent",
-  //     amount: 0.5,
-  //     status: "Approved",
-  //     to: "0xabcdef1234567890abcdef1234567890abcdef12",
-  //   },
-  //   {
-  //     id: "txn6",
-  //     date: "2024-11-06 16:45:30",
-  //     type: "Received",
-  //     amount: 0.5,
-  //     status: "Rejected",
-  //     from: "0x9876543210abcdef9876543210abcdef98765432",
-  //   },
-  // ];
-
   const { data: walletData, loading: isLoading } = useQuery(GET_WALLET);
   const { data: userData, loading: isUserLoading } = useQuery(GET_USER);
 
-  const { data: transactionsData, loading: isTransactionsLoading } = useQuery(
-    GET_USER_TRANSACTIONS,
-    {
-      variables: { input: { type: activeTab } },
-      skip: !userData?.me.id,
-    }
-  );
+  const {
+    data: transactionsData,
+    loading: isTransactionsLoading,
+    refetch,
+  } = useQuery(GET_USER_TRANSACTIONS, {
+    variables: { input: { type: activeTab } },
+    skip: !userData?.me.id,
+  });
+
+  const { subscribeToTransactions } = useSocket(userData?.me?.id);
+
+  useEffect(() => {
+    if (!userData?.me?.id) return;
+
+    // Subscribe to transaction updates
+    const unsubscribe = subscribeToTransactions((data: any) => {
+      console.log("Transaction update:", data);
+
+      // Show appropriate notification
+      const message = `Transaction ${data.status}: ${data.amount} ETH`;
+      if (data.status === "completed") {
+        showToast.success(message);
+      } else if (data.status === "failed") {
+        showToast.error(message);
+      }
+
+      // Refresh transactions list
+      refetch();
+    });
+
+    // Cleanup subscription
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [userData?.me?.id, subscribeToTransactions, refetch]);
 
   // const [transactions] = useState<Transaction[]>(
   //   transactionsData?.getUserTransactions || []
@@ -173,6 +152,14 @@ const Wallet: React.FC = () => {
           .includes(searchQuery.toLowerCase()) ||
         txn.senderWalletId?.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  const getPendingTransactionsCount = () => {
+    return transactions.filter((txn: any) => txn.status === "pending").length;
+  };
+
+  const getCompletedTransactionsCount = () => {
+    return transactions.filter((txn: any) => txn.status === "completed").length;
+  };
 
   return (
     <PageTemplate>
@@ -246,8 +233,8 @@ const Wallet: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-400">
-              {walletData?.getWallet.totalTransactions ?? 0} transactions •{" "}
-              {walletData?.getWallet.pendingTransactions ?? 0} pending
+              {getCompletedTransactionsCount()} transactions •{" "}
+              {getPendingTransactionsCount() ?? 0} pending
             </span>
           </div>
         </div>
@@ -257,7 +244,7 @@ const Wallet: React.FC = () => {
           <CardHeader>
             <CardTitle>Transactions</CardTitle>
             <div className="flex items-center gap-4 mt-4">
-              <div className="flex-1">
+              {/* <div className="flex-1">
                 <Input
                   placeholder="Search transactions..."
                   value={searchQuery}
@@ -265,8 +252,8 @@ const Wallet: React.FC = () => {
                   className="w-full"
                   prefix={<Search className="w-4 h-4 text-gray-400" />}
                 />
-              </div>
-              <Select value={dateFilter} onValueChange={setDateFilter}>
+              </div> */}
+              {/* <Select value={dateFilter} onValueChange={setDateFilter}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Filter by date" />
                 </SelectTrigger>
@@ -276,7 +263,7 @@ const Wallet: React.FC = () => {
                   <SelectItem value="week">This Week</SelectItem>
                   <SelectItem value="month">This Month</SelectItem>
                 </SelectContent>
-              </Select>
+              </Select> */}
             </div>
           </CardHeader>
           <CardContent>
