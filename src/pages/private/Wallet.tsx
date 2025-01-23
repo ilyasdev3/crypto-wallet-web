@@ -102,6 +102,7 @@ const Wallet: React.FC = () => {
   }, [userData?.me?.id, subscribeToTransactions, refetch]);
 
   const transactions = transactionsData?.getUserTransactions.transactions || [];
+  const pageInfo = transactionsData?.getUserTransactions.pageInfo;
 
   console.log("transactionsData", transactions);
   console.log("activeTab", activeTab);
@@ -228,8 +229,11 @@ const Wallet: React.FC = () => {
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-400">
-              {getCompletedTransactionsCount()} transactions •{" "}
-              {getPendingTransactionsCount() ?? 0} pending
+              {pageInfo?.totalItems} transactions •{" "}
+              {activeTab === "pending"
+                ? getPendingTransactionsCount()
+                : getCompletedTransactionsCount()}{" "}
+              {activeTab === "pending" ? "pending" : "completed"}
             </span>
           </div>
         </div>
