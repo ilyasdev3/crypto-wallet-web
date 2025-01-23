@@ -177,7 +177,7 @@ const Signup: React.FC = () => {
                 value={formData.firstName}
                 onChange={handleInputChange}
                 className="w-full p-3 bg-dark-100 text-white rounded-lg border border-dark-50/10 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                placeholder="John"
+                placeholder="firstName"
                 disabled={isSubmitting}
                 required
               />
@@ -195,7 +195,7 @@ const Signup: React.FC = () => {
                 value={formData.lastName}
                 onChange={handleInputChange}
                 className="w-full p-3 bg-dark-100 text-white rounded-lg border border-dark-50/10 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                placeholder="Doe"
+                placeholder="lastName"
                 disabled={isSubmitting}
                 required
               />
@@ -216,7 +216,7 @@ const Signup: React.FC = () => {
               value={formData.email}
               onChange={handleInputChange}
               className="w-full p-3 bg-dark-100 text-white rounded-lg border border-dark-50/10 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-              placeholder="john.doe@example.com"
+              placeholder="email@gmail.com"
               disabled={isSubmitting}
               required
             />
@@ -236,7 +236,7 @@ const Signup: React.FC = () => {
               value={formData.username}
               onChange={handleInputChange}
               className="w-full p-3 bg-dark-100 text-white rounded-lg border border-dark-50/10 focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-              placeholder="johndoe"
+              placeholder="username"
               disabled={isSubmitting}
               required
             />
