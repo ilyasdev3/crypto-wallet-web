@@ -71,7 +71,7 @@ const Contact: React.FC = () => {
                       href="mailto:support@walletapp.com"
                       className="text-gray-400 hover:text-primary-500 transition-colors"
                     >
-                      support@walletapp.com
+                      ilyasdev3@gmail.com
                     </a>
                   </div>
                 </div>
@@ -88,10 +88,10 @@ const Contact: React.FC = () => {
                   <div>
                     <h3 className="font-semibold text-white">Call Us</h3>
                     <a
-                      href="tel:+15551234567"
+                      href="tel:+923144778939"
                       className="text-gray-400 hover:text-primary-500 transition-colors"
                     >
-                      +1 (555) 123-4567
+                      +923 1447 78939
                     </a>
                   </div>
                 </div>
@@ -99,7 +99,7 @@ const Contact: React.FC = () => {
             </Card>
 
             {/* Hours Card */}
-            <Card className="bg-dark-200 border-none">
+            {/* <Card className="bg-dark-200 border-none">
               <CardContent className="p-6">
                 <div className="flex items-center space-x-4">
                   <div className="p-3 bg-primary-500/10 rounded-lg">
@@ -111,7 +111,7 @@ const Contact: React.FC = () => {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
 
             {/* GitHub Card */}
             <Card className="bg-dark-200 border-none">
@@ -123,12 +123,12 @@ const Contact: React.FC = () => {
                   <div>
                     <h3 className="font-semibold text-white">GitHub</h3>
                     <a
-                      href="https://github.com/walletapp"
+                      href="https://github.com/ilyasdev3"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-400 hover:text-primary-500 transition-colors"
                     >
-                      @walletapp
+                      @ilyasdev3
                     </a>
                   </div>
                 </div>
@@ -145,12 +145,12 @@ const Contact: React.FC = () => {
                   <div>
                     <h3 className="font-semibold text-white">LinkedIn</h3>
                     <a
-                      href="https://linkedin.com/company/walletapp"
+                      href="https://www.linkedin.com/in/ilyasdev"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-400 hover:text-primary-500 transition-colors"
                     >
-                      WalletApp
+                      ilyasdev
                     </a>
                   </div>
                 </div>
