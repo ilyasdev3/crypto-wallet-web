@@ -4,7 +4,7 @@ import Button from "./ui/Button";
 import Typography from "./ui/Typography";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "../graphql/user/queries.user";
-import ProfileDropdownNavbar from "./ProfileDropdown.Navbar";
+import ProfileDropdownNavbar from "./ProfileDropdownNavbar";
 import { ensureHttps } from "../utils/imageUrlChecker";
 
 const Navbar = () => {
@@ -21,9 +21,9 @@ const Navbar = () => {
 
   const { loading, error, data } = useQuery(GET_USER);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <nav className="bg-dark p-4 shadow-md relative">
