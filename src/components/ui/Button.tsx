@@ -2,12 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 interface ButtonProps {
-  variant: "primary" | "secondary" | "outlined" | "text"; // Different button styles
-  size: "small" | "medium" | "large"; // Button sizes
-  onClick?: () => void; // Optional click handler
-  to?: string; // Link target (optional, if it's a navigation button)
-  children: React.ReactNode; // Button content
-  className?: string; // Custom classes
+  variant: "primary" | "secondary" | "outlined" | "text";
+  size: "small" | "medium" | "large";
+  onClick?: () => void;
+  to?: string;
+  children: React.ReactNode;
+  className?: string;
+  disabled?: boolean;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -17,11 +18,11 @@ const Button: React.FC<ButtonProps> = ({
   to,
   children,
   className = "",
+  disabled = false,
 }) => {
   const baseClasses =
     "font-semibold rounded-lg focus:outline-none transition-all duration-300";
 
-  // Define button styles based on variant and size
   const variantClasses = {
     primary: "bg-primary-500 text-white hover:bg-primary-600",
     secondary: "bg-accent-blue text-white hover:bg-accent-blue/80",
@@ -36,15 +37,22 @@ const Button: React.FC<ButtonProps> = ({
     large: "px-6 py-3 text-lg",
   };
 
-  const buttonClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+  const disabledClasses = disabled
+    ? "opacity-50 cursor-not-allowed pointer-events-none"
+    : "";
 
-  // Render Link if 'to' is provided, else render a regular button
+  const buttonClasses = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${disabledClasses} ${className}`;
+
   return to ? (
-    <Link to={to} className={buttonClasses}>
+    <Link
+      to={to}
+      className={buttonClasses}
+      onClick={disabled ? (e) => e.preventDefault() : undefined}
+    >
       {children}
     </Link>
   ) : (
-    <button onClick={onClick} className={buttonClasses}>
+    <button onClick={onClick} className={buttonClasses} disabled={disabled}>
       {children}
     </button>
   );
