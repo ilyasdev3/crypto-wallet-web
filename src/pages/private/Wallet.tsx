@@ -25,14 +25,6 @@ import {
   Search,
   ArrowRight,
 } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../components/ui/select";
-import { Input } from "../../components/ui/input";
 
 import TransactionModal from "../../components/modals/TransactionModal";
 import { useQuery, useMutation } from "@apollo/client";
@@ -62,6 +54,7 @@ const Wallet: React.FC = () => {
   const [isDepositOpen, setIsDepositOpen] = useState(false);
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [isTransferOpen, setIsTransferOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { data: walletData, loading: isLoading } = useQuery(GET_WALLET);
   const { data: userData, loading: isUserLoading } = useQuery(GET_USER);
@@ -71,7 +64,13 @@ const Wallet: React.FC = () => {
     loading: isTransactionsLoading,
     refetch,
   } = useQuery(GET_USER_TRANSACTIONS, {
-    variables: { input: { type: activeTab } },
+    variables: {
+      input: { type: activeTab },
+      pagination: {
+        limit: 10,
+        page: currentPage,
+      },
+    },
     skip: !userData?.me.id,
   });
 
@@ -102,11 +101,7 @@ const Wallet: React.FC = () => {
     };
   }, [userData?.me?.id, subscribeToTransactions, refetch]);
 
-  // const [transactions] = useState<Transaction[]>(
-  //   transactionsData?.getUserTransactions || []
-  // );
-
-  const transactions = transactionsData?.getUserTransactions || [];
+  const transactions = transactionsData?.getUserTransactions.transactions || [];
 
   console.log("transactionsData", transactions);
   console.log("activeTab", activeTab);
@@ -243,28 +238,7 @@ const Wallet: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle>Transactions</CardTitle>
-            <div className="flex items-center gap-4 mt-4">
-              {/* <div className="flex-1">
-                <Input
-                  placeholder="Search transactions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full"
-                  prefix={<Search className="w-4 h-4 text-gray-400" />}
-                />
-              </div> */}
-              {/* <Select value={dateFilter} onValueChange={setDateFilter}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Filter by date" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Time</SelectItem>
-                  <SelectItem value="today">Today</SelectItem>
-                  <SelectItem value="week">This Week</SelectItem>
-                  <SelectItem value="month">This Month</SelectItem>
-                </SelectContent>
-              </Select> */}
-            </div>
+            <div className="flex items-center gap-4 mt-4"></div>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab}>
