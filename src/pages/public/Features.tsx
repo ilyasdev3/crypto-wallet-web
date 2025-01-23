@@ -1,14 +1,14 @@
 import React from "react";
 import { Card, CardContent } from "../../components/ui/card";
 import {
-  Shield,
   Wallet,
+  ArrowRightLeft,
   Globe,
   BarChart3,
-  Zap,
-  Clock,
+  Shield,
   Users,
-  Lock,
+  Bell,
+  Newspaper,
 } from "lucide-react";
 import Button from "../../components/ui/Button";
 import PageTemplate from "../../components/_layout";
@@ -28,52 +28,52 @@ const FeatureCard = ({ icon: Icon, title, description }: any) => (
 const Features = () => {
   const features = [
     {
-      icon: Shield,
-      title: "Bank-Grade Security",
-      description:
-        "Advanced encryption and multi-signature technology protect your assets with institutional-grade security measures and regular security audits.",
-    },
-    {
       icon: Wallet,
-      title: "Multi-Currency Support",
+      title: "Secure Ethereum Wallet",
       description:
-        "Manage multiple cryptocurrencies in one secure wallet. Support for Bitcoin, Ethereum, and other major cryptocurrencies with real-time conversion rates.",
+        "Manage your ETH with our secure wallet implementation. Send, receive, and store your cryptocurrency with confidence using industry-standard security practices.",
     },
     {
-      icon: Globe,
-      title: "Global Accessibility",
+      icon: ArrowRightLeft,
+      title: "Easy Transactions",
       description:
-        "Access your wallet from anywhere in the world, with support for multiple languages and currencies. Available 24/7 on all devices.",
+        "Transfer funds between users seamlessly. Our platform supports both internal transfers to other users and external withdrawals to any Ethereum address.",
     },
     {
       icon: BarChart3,
-      title: "Advanced Analytics",
+      title: "Transaction History",
       description:
-        "Comprehensive portfolio tracking with detailed analytics, performance metrics, and customizable reports to inform your investment decisions.",
-    },
-    {
-      icon: Zap,
-      title: "Instant Transactions",
-      description:
-        "Lightning-fast transactions with optimal gas fees and automatic transaction verification. Real-time updates on transaction status.",
-    },
-    {
-      icon: Clock,
-      title: "24/7 Support",
-      description:
-        "Round-the-clock customer support through multiple channels. Expert assistance available whenever you need it, with rapid response times.",
+        "Keep track of all your transactions with detailed history and real-time status updates. Monitor pending, completed, and failed transactions easily.",
     },
     {
       icon: Users,
-      title: "Social Trading",
+      title: "Social Integration",
       description:
-        "Connect with other traders, share insights, and learn from the community. Follow top performers and replicate their successful strategies.",
+        "Connect with other users through our social features. Follow other traders, share updates, and build your crypto community within the platform.",
     },
     {
-      icon: Lock,
-      title: "Privacy Control",
+      icon: Bell,
+      title: "Real-time Notifications",
       description:
-        "Full control over your privacy settings with optional anonymity features. Choose what you share and with whom.",
+        "Stay informed with instant notifications for all your wallet activities. Get alerts for incoming transfers, successful transactions, and important updates.",
+    },
+    {
+      icon: Shield,
+      title: "Secure Authentication",
+      description:
+        "Your assets are protected with robust authentication mechanisms. Enjoy peace of mind with our JWT-based authentication system and secure session management.",
+    },
+    {
+      icon: Newspaper,
+      title: "News Feed",
+      description:
+        "Stay updated with your network's activities through our integrated news feed. Share posts, interact with other users, and keep up with the latest updates.",
+    },
+    {
+      icon: Globe,
+      title: "Multi-Network Support",
+      description:
+        "Built on the Ethereum network with support for various test networks including Holesky. Easily manage your assets across different Ethereum networks.",
     },
   ];
 
@@ -84,11 +84,11 @@ const Features = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
           <div className="text-center">
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
-              Powerful Features for Modern Crypto Trading
+              Powerful Features for Your Crypto Wallet
             </h1>
             <p className="text-gray-300 max-w-2xl mx-auto text-lg">
-              Experience the next generation of cryptocurrency management with
-              our comprehensive suite of trading and security features.
+              Experience a comprehensive suite of tools designed to make
+              managing your digital assets simple, secure, and social.
             </p>
           </div>
         </div>
@@ -109,16 +109,16 @@ const Features = () => {
               Ready to Get Started?
             </h2>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              Join thousands of traders who have already discovered the power of
-              our platform.
+              Join our community and experience the next generation of crypto
+              wallet management.
             </p>
             <Button
-              to="/wallet"
+              to="/register"
               variant="primary"
               size="large"
               className="bg-primary-500 hover:bg-primary-600 text-white px-8 py-3 rounded-lg transition-colors duration-300"
             >
-              Get Started
+              Create Account
             </Button>
           </div>
         </div>
