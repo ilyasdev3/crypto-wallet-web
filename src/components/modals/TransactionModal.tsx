@@ -118,6 +118,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     {
       onCompleted: (data) => {
         showToast.success(data.transferFunds.message);
+        refetch();
         onClose();
       },
       onError: (error) => {
@@ -429,6 +430,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           {/* Action Buttons */}
           <div className="flex gap-3">
             <Button
+              disabled={isLoading || isTransferring || isWithdrawing}
               variant="outlined"
               size="large"
               className="flex-1"
@@ -438,6 +440,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
             </Button>
             <Button
               // type="submit"
+              disabled={isLoading || isTransferring || isWithdrawing}
               variant={type === "deposit" ? "primary" : "secondary"}
               size="large"
               className="flex-1"
@@ -447,7 +450,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
 
               // disabled={isLoading || (type === "transfer" && !userFound)}
             >
-              {isLoading ? (
+              {isLoading || isTransferring || isWithdrawing ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                   <span>Processing...</span>
