@@ -17,10 +17,8 @@ const RightColumnContent = ({ profile, followers, following }: any) => {
   return (
     <Card className="bg-dark-200 shadow-xl">
       <CardContent className="p-6">
-        {/* Stats Section with buttons to the left */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex gap-6">
-            {/* Posts Stats */}
             <div className="flex items-center gap-2">
               <button className="text-xl font-semibold text-primary-500 hover:bg-dark-300 rounded-md p-2 transition-colors">
                 Posts
@@ -51,13 +49,11 @@ const RightColumnContent = ({ profile, followers, following }: any) => {
             </div>
           </div>
 
-          {/* Add more button on the right */}
           <button className="bg-primary-500 text-white rounded-lg px-4 py-2 hover:bg-primary-600 transition-colors">
             Add More
           </button>
         </div>
 
-        {/* Activity Tab Content */}
         <div className="space-y-6">
           {profile.recentActivity.map((activity: any) => (
             <Card key={activity.id} className="bg-dark-100">
@@ -100,7 +96,6 @@ const RightColumnContent = ({ profile, followers, following }: any) => {
           ))}
         </div>
 
-        {/* Followers Tab Content */}
         <div className="space-y-4">
           <Input
             placeholder="Search followers..."
@@ -155,7 +150,6 @@ const RightColumnContent = ({ profile, followers, following }: any) => {
           </div>
         </div>
 
-        {/* Following Tab Content */}
         <div className="space-y-4">
           <Input
             placeholder="Search following..."

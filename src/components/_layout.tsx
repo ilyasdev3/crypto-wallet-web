@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "./Navbar";
-import Typography from "./ui/Typography";
 
 interface PageTemplateProps {
   children: React.ReactNode;

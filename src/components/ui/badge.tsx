@@ -1,4 +1,3 @@
-// components/ui/badge.tsx
 import * as React from "react";
 import { type VariantProps, cva } from "class-variance-authority";
 

@@ -50,7 +50,6 @@ export const GET_POST = gql`
     }
   }
 `;
-
 export const GET_ALL_POSTS = gql`
   query GetAllPosts($filters: PostFilter) {
     getAllPosts(filters: $filters) {

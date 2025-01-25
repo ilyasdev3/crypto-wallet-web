@@ -9,13 +9,6 @@ import {
 import { Input } from "../../components/ui/input";
 import Button from "../ui/Button";
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "../../components/ui/select";
-import {
   ArrowDownRight,
   ArrowUpRight,
   Info,
@@ -47,35 +40,20 @@ interface TokenOption {
   icon: string;
 }
 
-const tokens: TokenOption[] = [
-  {
-    symbol: "ETH",
-    name: "Ethereum",
-    balance: "1.234",
-    icon: "🌐",
-  },
-  {
-    symbol: "USDT",
-    name: "Tether",
-    balance: "1,234.56",
-    icon: "💵",
-  },
-  {
-    symbol: "USDC",
-    name: "USD Coin",
-    balance: "2,345.67",
-    icon: "💰",
-  },
-];
+const ethToken: TokenOption = {
+  symbol: "ETH",
+  name: "Ethereum",
+  balance: "1.234",
+  icon: "🌐",
+};
 
 const TransactionModal: React.FC<TransactionModalProps> = ({
   isOpen,
   onClose,
   type,
-  userWalletAddress = "0x1234...5678", // Default value for demo
+  userWalletAddress = "0x1234...5678",
 }) => {
   const [amount, setAmount] = useState("");
-  const [selectedToken, setSelectedToken] = useState<string>(tokens[0].symbol);
   const [isLoading, setIsLoading] = useState(false);
   const [recipientAddress, setRecipientAddress] = useState("");
   const [recipientUsername, setRecipientUsername] = useState("");
@@ -96,12 +74,9 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
         setUserNotFound(false);
         setRecipientAddress(data.getUserWithName.user.address);
         setRecipientAddress(data.getUserWithName.address);
-
-        // showToast.success("User found successfully");
       } else {
         setUserFound(false);
         setUserNotFound(true);
-        // showToast.error("User not found");
       }
       setIsSearchingUser(false);
     },
@@ -109,7 +84,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       setIsSearchingUser(false);
       setUserFound(false);
       setUserNotFound(true);
-      // showToast.error(error.message || "Failed to find user");
     },
   });
 
@@ -160,16 +134,32 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setIsLoading(true);
 
     try {
-      // Validate inputs based on transaction type
-      if (type === "withdraw" && !recipientAddress) {
-        throw new Error("Please enter a valid wallet address");
+      if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+        throw new Error("Please enter a valid amount greater than zero");
       }
 
-      if (type === "transfer" && !recipientUsername) {
-        throw new Error("Please enter a valid username");
+      if (type === "withdraw") {
+        if (!recipientAddress) {
+          throw new Error("Please enter a valid wallet address");
+        }
       }
-      if (type === "transfer" && !recipientAddress) {
-        await handleUsernameSearch();
+
+      if (type === "transfer") {
+        if (!recipientUsername) {
+          throw new Error("Please enter a valid username");
+        }
+        if (!recipientAddress) {
+          await handleUsernameSearch();
+        }
+        if (!userFound) {
+          throw new Error("Recipient user not found");
+        }
+      }
+
+      if (type === "transfer") {
+        await handleTransferFunds();
+      } else if (type === "withdraw") {
+        await handleWithdrawFunds();
       }
     } catch (error) {
       showToast.error(
@@ -190,8 +180,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
       showToast.error("Failed to copy address");
     }
   };
-
-  const selectedTokenData = tokens.find((t) => t.symbol === selectedToken);
 
   const renderTransactionFields = () => {
     switch (type) {
@@ -221,7 +209,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               </Button>
             </div>
             <p className="text-sm text-gray-400">
-              Send only {selectedToken} to this address
+              Send only {ethToken.symbol} to this address
             </p>
           </div>
         );
@@ -349,50 +337,23 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
           }}
           className="space-y-6"
         >
-          {/* Token Selection */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-400">
-              Select Token
-            </label>
-            <Select value={selectedToken} onValueChange={setSelectedToken}>
-              <SelectTrigger className="w-full">
-                <SelectValue>
-                  <div className="flex items-center gap-2">
-                    <span>{selectedTokenData?.icon}</span>
-                    <span>{selectedTokenData?.symbol}</span>
-                  </div>
-                </SelectValue>
-              </SelectTrigger>
-              <SelectContent>
-                {tokens.map((token) => (
-                  <SelectItem key={token.symbol} value={token.symbol}>
-                    <div className="flex items-center justify-between w-full">
-                      <div className="flex items-center gap-2">
-                        <span>{token.icon}</span>
-                        <div>
-                          <p className="font-medium">{token.symbol}</p>
-                          <p className="text-xs text-gray-400">{token.name}</p>
-                        </div>
-                      </div>
-                      {token.balance && (
-                        <p className="text-sm text-gray-400">
-                          Balance: {token.balance}
-                        </p>
-                      )}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {/* <label className="text-sm font-medium text-gray-400">
+              Balance: {ethToken.balance}
+            </label> */}
+            <div className="flex items-center gap-2 p-3 bg-dark-100 rounded-lg text-white">
+              <span>{ethToken.icon}</span>
+              <span>{ethToken.symbol}</span>
+              <span className="text-sm text-gray-400">
+                Balance: {ethToken.balance}
+              </span>
+            </div>
           </div>
 
-          {/* Transaction Type Specific Fields */}
           {renderTransactionFields()}
 
-          {/* Amount Input */}
           <div className="space-y-1">
             <label className="text-sm font-medium text-gray-400">Amount</label>
-            {/* <div className="relative"> */}
             <Input
               type="number"
               placeholder="0.00"
@@ -400,34 +361,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               onChange={(e) => setAmount(e.target.value)}
               className="text-white"
             />
-            {/* <button
-                type="button"
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-primary-500 font-medium hover:text-primary-400"
-                onClick={() => setAmount(selectedTokenData?.balance || "0")}
-              >
-                MAX
-              </button> */}
-            {/* </div> */}
           </div>
 
-          {/* Network Fee Estimate */}
-          {/* <div className="p-3 bg-dark-100 rounded-lg space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <div className="flex items-center gap-1 text-gray-400">
-                <span>Network Fee</span>
-                <Info className="w-4 h-4" />
-              </div>
-              <span className="text-white">~$2.50</span>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-400">You will receive</span>
-              <span className="font-medium text-white">
-                {amount || "0.00"} {selectedToken}
-              </span>
-            </div>
-          </div> */}
-
-          {/* Action Buttons */}
           <div className="flex gap-3">
             <Button
               disabled={isLoading || isTransferring || isWithdrawing}
@@ -439,7 +374,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               Cancel
             </Button>
             <Button
-              // type="submit"
               disabled={isLoading || isTransferring || isWithdrawing}
               variant={type === "deposit" ? "primary" : "secondary"}
               size="large"
@@ -447,8 +381,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               onClick={
                 type === "transfer" ? handleTransferFunds : handleWithdrawFunds
               }
-
-              // disabled={isLoading || (type === "transfer" && !userFound)}
             >
               {isLoading || isTransferring || isWithdrawing ? (
                 <div className="flex items-center gap-2">

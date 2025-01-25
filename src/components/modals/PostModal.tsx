@@ -1,4 +1,3 @@
-// components/modals/PostModal.tsx
 import React, { useState } from "react";
 import {
   Dialog,
@@ -6,7 +5,7 @@ import {
   DialogHeader,
 } from "../../components/ui/dialog";
 import Button from "../../components/ui/Button";
-import { Input } from "../../components/ui/input"; // Import Input component
+import { Input } from "../../components/ui/input";
 import {
   Avatar,
   AvatarFallback,
@@ -63,7 +62,6 @@ interface PostModalProps {
 }
 
 const formatTimestamp = (timestamp: string) => {
-  // Convert timestamp to relative time (e.g., "2h ago")
   return new Date(timestamp).toLocaleString();
 };
 
@@ -85,7 +83,7 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
     if (!newComment.trim()) return;
 
     setIsSubmitting(true);
-    // Simulate API call
+
     setTimeout(() => {
       const newCommentObj: Comment = {
         id: Date.now().toString(),
@@ -120,7 +118,6 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
                   className="aspect-square h-full w-full"
                 />
                 <AvatarFallback>
-                  {/* Add initials or any fallback content here, like the first letter of the username */}
                   {post.user.name ? post.user.name.charAt(0) : "?"}
                 </AvatarFallback>
               </Avatar>
@@ -142,7 +139,6 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
           </div>
         </DialogHeader>
 
-        {/* Post Content */}
         <div className="flex-1 overflow-y-auto">
           <div className="p-4 border-b border-dark-100">
             <p className="text-base mb-4 whitespace-pre-wrap">{post.content}</p>
@@ -163,7 +159,6 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
             </div>
           </div>
 
-          {/* Interaction Bar */}
           <div className="flex items-center justify-between p-4 border-b border-dark-100">
             <div className="flex items-center gap-6">
               <button
@@ -198,7 +193,6 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
             </button>
           </div>
 
-          {/* Comments Section */}
           <div className="flex-1">
             {comments.map((comment) => (
               <div key={comment.id} className="p-4 border-b border-dark-100">
@@ -210,7 +204,6 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
                       className="aspect-square h-full w-full"
                     />
                     <AvatarFallback>
-                      {/* Add initials or any fallback content here, like the first letter of the username */}
                       {comment.user.name ? comment.user.name.charAt(0) : "?"}
                     </AvatarFallback>
                   </Avatar>
@@ -240,7 +233,6 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
           </div>
         </div>
 
-        {/* Comment Input */}
         <div className="sticky bottom-0 bg-dark-50 border-t border-dark-100 p-4">
           <form
             onSubmit={handleCommentSubmit}
@@ -252,10 +244,7 @@ const PostModal: React.FC<PostModalProps> = ({ isOpen, onClose, post }) => {
                 alt="Current user"
                 className="aspect-square h-full w-full"
               />
-              <AvatarFallback>
-                {/* Add initials or any fallback content here, like the first letter of the username */}
-                C
-              </AvatarFallback>
+              <AvatarFallback>C</AvatarFallback>
             </Avatar>
             <div className="flex-1 relative">
               <Input
