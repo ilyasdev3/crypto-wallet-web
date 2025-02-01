@@ -1,10 +1,18 @@
 {
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    },
-    "config": {
-      "external": ["mock-aws-s3", "aws-sdk", "nock"]
+  "version": 2,
+  "builds": [
+    {
+      "src": "vite.config.ts",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
-  }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/$1"
+    }
+  ]
 }
