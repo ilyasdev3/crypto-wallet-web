@@ -9,7 +9,7 @@ const TrendingTopics: React.FC = () => {
         <h3 className="text-lg font-semibold mb-4 text-white">
           Trending Topics
         </h3>
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           {["#Crypto", "#NFT", "#DeFi", "#Web3"].map((topic, index) => (
             <div key={index} className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -21,7 +21,7 @@ const TrendingTopics: React.FC = () => {
               <span className="text-sm text-gray-400">2.5K posts</span>
             </div>
           ))}
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );
