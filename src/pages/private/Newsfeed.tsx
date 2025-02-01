@@ -34,6 +34,8 @@ const Newsfeed: React.FC = () => {
     fetchPolicy: "network-only",
   });
 
+  console.log("userFollowersPosts", userFollowersPosts);
+
   const [followUser] = useMutation(FOLLOW_USER_UNFOLLOW_USER, {
     onCompleted: () => refetchUser(),
   });
