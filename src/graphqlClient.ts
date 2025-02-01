@@ -3,7 +3,7 @@ import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
 const httpLink = createHttpLink({
-  uri: "crypto-wallet-f5bom1481-ilyasdev3s-projects.vercel.app",
+  uri: "crypto-wallet-backend-git-development-ilyasdev3s-projects.vercel.app",
   credentials: "include",
 });
 
