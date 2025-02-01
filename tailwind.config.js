@@ -55,6 +55,9 @@ export default {
         "2xl": "1.5rem",
       },
     },
+    fontFamily: {
+      montserrat: ["montserrat"],
+    },
   },
   plugins: [],
 };
