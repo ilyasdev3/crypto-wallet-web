@@ -1,5 +1,5 @@
 import React from "react";
-import { AccountBalanceWallet, VerifiedUser, Send } from "@mui/icons-material";
+import { AccountBalanceWallet, Explore, Send } from "@mui/icons-material";
 
 const steps = [
   {
@@ -11,10 +11,10 @@ const steps = [
     ),
   },
   {
-    title: "Verify Your Account",
+    title: "Explore Features",
     description:
-      "Easily verify your identity to access all features and ensure security in every transaction.",
-    icon: <VerifiedUser fontSize="large" className="text-primary-500" />,
+      "Discover all the powerful features of our wallet, including transaction history, social integration, and more.",
+    icon: <Explore fontSize="large" className="text-primary-500" />,
   },
   {
     title: "Start Transacting",
