@@ -7,10 +7,10 @@ const Footer: React.FC = () => {
       <div className="container mx-auto text-center">
         <Box className="space-y-4">
           <Typography className="text-white text-xl font-semibold">
-            WalletApp
+            Coindex
           </Typography>
           <Typography className="text-gray-400 text-sm">
-            &copy; {new Date().getFullYear()} WalletApp. All rights reserved.
+            &copy; {new Date().getFullYear()} Coindex. All rights reserved.
           </Typography>
 
           <div className="flex justify-center space-x-6">
