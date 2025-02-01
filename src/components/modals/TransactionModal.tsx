@@ -25,6 +25,7 @@ import {
   WITHDRAW_FUNDS,
 } from "../../graphql/wallet/mutation.wallet";
 import { GET_USER_TRANSACTIONS } from "../../graphql/transaction/query.transaction";
+import { GET_WALLET } from "../../graphql/wallet/query.wallet";
 
 interface TransactionModalProps {
   isOpen: boolean;
@@ -39,13 +40,6 @@ interface TokenOption {
   balance?: string;
   icon: string;
 }
-
-const ethToken: TokenOption = {
-  symbol: "ETH",
-  name: "Ethereum",
-  balance: "1.234",
-  icon: "🌐",
-};
 
 const TransactionModal: React.FC<TransactionModalProps> = ({
   isOpen,
@@ -65,6 +59,17 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   const { refetch } = useQuery(GET_USER_TRANSACTIONS, {
     variables: { input: { type: "pending" } },
   });
+
+  const { data: walletData, loading: walletLoading } = useQuery(GET_WALLET);
+
+  console.log("walletData", walletData);
+
+  const ethToken: TokenOption = {
+    symbol: "ETH",
+    name: "Ethereum",
+    balance: walletData?.getWallet?.balance,
+    icon: "🌐",
+  };
 
   const [getUserWithName, { loading }] = useLazyQuery(GET_USER_WITH_NAME, {
     onCompleted: (data) => {
