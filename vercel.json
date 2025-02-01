@@ -1,0 +1,10 @@
+{
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    },
+    "config": {
+      "external": ["mock-aws-s3", "aws-sdk", "nock"]
+    }
+  }
+}
