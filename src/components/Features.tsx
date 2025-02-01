@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  Security,
-  TrendingUp,
-  AccountBalanceWallet,
-} from "@mui/icons-material";
+import { Security, TrendingUp, People } from "@mui/icons-material";
 
 const features = [
   {
@@ -19,12 +15,10 @@ const features = [
     icon: <TrendingUp fontSize="large" className="text-primary-500" />,
   },
   {
-    title: "Multi-Wallet Support",
+    title: "Social Integration",
     description:
-      "Easily manage multiple wallets and keep track of all your digital assets in one place.",
-    icon: (
-      <AccountBalanceWallet fontSize="large" className="text-primary-500" />
-    ),
+      "Connect with other users, share updates, and build your crypto community within the platform.",
+    icon: <People fontSize="large" className="text-primary-500" />,
   },
 ];
 
