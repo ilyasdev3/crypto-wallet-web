@@ -3,12 +3,13 @@ import { Card, CardContent } from "../../components/ui/card";
 import {
   Wallet,
   ArrowRightLeft,
-  Globe,
   BarChart3,
   Shield,
   Users,
   Bell,
   Newspaper,
+  Lock,
+  TrendingUp,
 } from "lucide-react";
 import Button from "../../components/ui/Button";
 import PageTemplate from "../../components/_layout";
@@ -70,10 +71,10 @@ const Features = () => {
         "Stay updated with your network's activities through our integrated news feed. Share posts, interact with other users, and keep up with the latest updates.",
     },
     {
-      icon: Globe,
-      title: "Multi-Network Support",
+      icon: Lock,
+      title: "Enhanced Security",
       description:
-        "Built on the Ethereum network with support for various test networks including Holesky. Easily manage your assets across different Ethereum networks.",
+        "Your funds are safeguarded with advanced encryption and multi-layer security protocols, ensuring maximum protection against unauthorized access.",
     },
   ];
 
