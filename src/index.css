@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*  font-family Montserrat */
+/* Bold */
+@font-face {
+  font-family: "montserrat";
+  src: url("/fonts/montserrat/Montserrat-Bold.ttf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* Regular */
+@font-face {
+  font-family: "montserrat";
+  src: url("/fonts/montserrat/Montserrat-Regular.ttf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Medium */
+@font-face {
+  font-family: "montserrat";
+  src: url("/fonts/montserrat/Montserrat-Medium.ttf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* Light */
+@font-face {
+  font-family: "montserrat";
+  src: url("/fonts/montserrat/Montserrat-Light.ttf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Thin */
+@font-face {
+  font-family: "montserrat";
+  src: url("/fonts/montserrat/Montserrat-Thin.ttf") format("opentype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter var";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  font-named-instance: "Regular";
+  src: url("/fonts/inter/Inter-roman.var.woff2?v=3.19") format("woff2");
+}
+@font-face {
+  font-family: "Inter var";
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  font-named-instance: "Italic";
+  src: url("/fonts/inter/Inter-italic.var.woff2?v=3.19") format("woff2");
+}
+
+body {
+  font-family: "montserrat";
+}
