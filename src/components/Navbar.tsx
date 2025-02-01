@@ -30,7 +30,7 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <Link to="/" className="text-primary-200 text-2xl font-bold">
-          WalletApp
+          Coindex
         </Link>
 
         {/* Menu for larger screens */}
