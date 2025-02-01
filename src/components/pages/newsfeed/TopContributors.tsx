@@ -15,7 +15,7 @@ const TopContributors: React.FC = () => {
         <h3 className="text-lg font-semibold mb-4 text-white">
           Top Contributors
         </h3>
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           {[1, 2, 3].map((_, index) => (
             <div key={index} className="flex items-center space-x-3">
               <Avatar>
@@ -34,7 +34,7 @@ const TopContributors: React.FC = () => {
               </Badge>
             </div>
           ))}
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );
