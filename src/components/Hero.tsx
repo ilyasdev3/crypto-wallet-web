@@ -31,7 +31,7 @@ const Hero: React.FC = () => {
 
         <div className="md:w-1/2 mt-8 md:mt-0 flex justify-center md:justify-end">
           <img
-            src="../../public/crypto_banner.png"
+            src="/crypto_banner.png"
             alt="Crypto Wallet App"
             className="w-full h-full max-w-md md:max-w-lg shadow-card"
           />
