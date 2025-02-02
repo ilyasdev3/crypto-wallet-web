@@ -56,7 +56,11 @@ const Wallet: React.FC = () => {
   const [isTransferOpen, setIsTransferOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: walletData, loading: isLoading } = useQuery(GET_WALLET);
+  const {
+    data: walletData,
+    loading: isLoading,
+    refetch: refetchWallet,
+  } = useQuery(GET_WALLET);
   const { data: userData, loading: isUserLoading } = useQuery(GET_USER);
 
   const {
@@ -87,6 +91,7 @@ const Wallet: React.FC = () => {
       const message = `Transaction ${data.status}: ${data.amount} ETH`;
       if (data.status === "completed") {
         showToast.success(message);
+        refetchWallet();
       } else if (data.status === "failed") {
         showToast.error(message);
       }
@@ -104,8 +109,8 @@ const Wallet: React.FC = () => {
   const transactions = transactionsData?.getUserTransactions.transactions || [];
   const pageInfo = transactionsData?.getUserTransactions.pageInfo;
 
-  console.log("transactionsData", transactions);
-  console.log("activeTab", activeTab);
+  // console.log("transactionsData", transactions);
+  // console.log("activeTab", activeTab);
 
   const handleCopyAddress = async () => {
     await navigator.clipboard.writeText(walletData?.getWallet.address);

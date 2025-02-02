@@ -78,7 +78,6 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
         setUserFound(true);
         setUserNotFound(false);
         setRecipientAddress(data.getUserWithName.user.address);
-        setRecipientAddress(data.getUserWithName.address);
       } else {
         setUserFound(false);
         setUserNotFound(true);
@@ -139,7 +138,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
     setIsLoading(true);
 
     try {
-      if (!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0) {
+      const parsedAmount = parseFloat(amount);
+      if (!amount || isNaN(parsedAmount) || parsedAmount <= 0) {
         throw new Error("Please enter a valid amount greater than zero");
       }
 
@@ -250,9 +250,8 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
               <Button
                 variant="outlined"
                 size="small"
-                // onClick={handleUsernameSearch}
-
-                // disabled={isSearchingUser}
+                onClick={handleUsernameSearch}
+                disabled={isSearchingUser}
                 className="flex-shrink-0"
               >
                 <Search className="w-4 h-4" />
