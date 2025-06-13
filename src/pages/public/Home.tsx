@@ -15,7 +15,7 @@ const Home: React.FC = () => {
       <HowItWorks />
       <Features />
       <CTASection />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Footer />
     </PageTemplate>
   );
